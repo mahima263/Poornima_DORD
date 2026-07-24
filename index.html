@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse Nexus — IIT Kanpur Research Intelligence Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --reddish-brown:#AB4531; --reddish-brown-d:#923524;
+  --mahogany:#421E18; --mahogany-d:#5d2b22;
+  --champagne:#FCE2C5; --champagne-soft:#FDF0DD;
+  --white:#FFFFFF;
+  --grey-olive:#798478; --grey-olive-d:#67705f;
+  --gold:#C9943A; --gold-d:#b07f2d;
+  --pill:#EFEBEB; --pill-text:#5b5b5b;
+  --ink:#1a1a1a; --ink-soft:#5d4a42;
+  --line:rgba(66,30,24,.14); --line-strong:rgba(66,30,24,.30);
+  --shadow:0 12px 32px rgba(66,30,24,.12);
+  --radius:16px;
+  --font-display:'Fraunces',Georgia,serif; --font-body:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;-webkit-text-size-adjust:100%}
+body{background:var(--white);color:var(--ink);font-family:var(--font-body);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--reddish-brown)}
+img{display:block}
+
+#app{height:100vh;display:flex;flex-direction:column}
+
+/* ================= HEADER ================= */
+header{
+  display:flex;align-items:center;gap:18px;padding:11px 26px;
+  border-bottom:1px solid var(--line);background:rgba(255,255,255,.95);
+  backdrop-filter:blur(8px);z-index:40;position:relative;
+}
+.logo{display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none;flex:none}
+.logo-mark{width:46px;height:46px;flex:none}.logo-mark svg{width:100%;height:100%}
+.logo-name{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--mahogany);letter-spacing:.02em}
+.logo-name span{color:var(--reddish-brown)}
+.logo-inst{font-size:9.5px;letter-spacing:.14em;color:var(--grey-olive);display:block;margin-top:1px;text-transform:uppercase;font-weight:600}
+.nav-tabs{flex:1 1 auto;display:flex;justify-content:center;gap:2px;min-width:0}
+.nav-tab{position:relative;background:none;border:none;color:var(--ink-soft);padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:500;white-space:nowrap}
+.nav-tab:hover{color:var(--reddish-brown)}
+.nav-tab.active{color:var(--reddish-brown);font-weight:600}
+.nav-tab.active::after{content:'';position:absolute;left:14px;right:14px;bottom:-1px;height:2.5px;border-radius:3px;background:var(--reddish-brown)}
+.hdr-search{flex:0 1 320px;position:relative;min-width:0}
+.hdr-search input{width:100%;background:var(--pill);border:1px solid transparent;color:var(--ink);padding:9px 13px 9px 34px;border-radius:999px;font-size:12.5px;outline:none;font-family:var(--font-body)}
+.hdr-search input:focus{border-color:var(--reddish-brown);background:#fff;box-shadow:0 0 0 3px rgba(171,69,49,.13)}
+.hdr-search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--grey-olive);font-size:13px}
+.hdr-cta{background:var(--reddish-brown);color:#fff;border:none;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:600;flex:none}
+.hdr-cta:hover{background:var(--reddish-brown-d)}
+
+main{flex:1;position:relative;overflow:hidden}
+
+/* ================ SEARCH RESULTS (shared) ================ */
+.search-results{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;
+  border:1px solid var(--line);border-radius:14px;max-height:420px;overflow:auto;
+  box-shadow:0 22px 60px rgba(66,30,24,.20);display:none;z-index:80;text-align:left;
+}
+.search-results.open{display:block}
+.sr-group{padding:10px 16px 4px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey-olive);font-weight:700;display:flex;justify-content:space-between}
+.sr-group em{font-style:normal;font-weight:500;letter-spacing:0;text-transform:none}
+.sr-item{display:flex;align-items:center;gap:11px;padding:10px 16px;cursor:pointer;font-size:13.5px}
+.sr-item:hover{background:var(--champagne-soft)}
+.sr-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sr-main{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-sub{color:var(--grey-olive);font-size:11px;margin-left:auto;flex:none}
+
+/* ================ LANDING / DISCOVER ================ */
+#discover{position:absolute;inset:0;overflow:auto;scroll-behavior:smooth;background:#fff}
+#discover.hidden{display:none}
+.wrap{max-width:1480px;margin:0 auto;padding:0 56px}
+
+/* --- hero --- */
+.hero{background:linear-gradient(180deg,var(--champagne-soft) 0%,#fff 100%);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:54px;align-items:center;padding:68px 0 64px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--reddish-brown);font-weight:700;margin-bottom:16px}
+.eyebrow::before{content:'';width:26px;height:2px;background:var(--gold)}
+.hero h1{font-family:var(--font-display);font-size:clamp(30px,3.8vw,50px);font-weight:600;line-height:1.12;color:var(--mahogany)}
+.hero h1 em{font-style:italic;color:var(--reddish-brown)}
+.hero .lede{color:var(--ink-soft);max-width:540px;margin-top:18px;font-size:15.5px;line-height:1.75}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.hero-cta .btn-primary,.hero-cta .btn-ghost{font-size:14.5px}
+.btn-ghost{background:#fff;color:var(--reddish-brown);border:1.5px solid rgba(171,69,49,.4);border-radius:12px;padding:14px 22px;font-weight:600;white-space:nowrap}
+.btn-ghost:hover{background:var(--champagne-soft);border-color:var(--reddish-brown)}
+
+.hero-visual{position:relative;min-height:380px}
+.hv-img{
+  position:absolute;border-radius:18px;overflow:hidden;border:1px solid var(--line);
+  box-shadow:var(--shadow);background:var(--champagne);
+}
+.hv-img img{width:100%;height:100%;object-fit:cover}
+.hv-1{width:62%;height:62%;right:8%;top:0;z-index:2}
+.hv-2{width:46%;height:46%;left:0;bottom:6%;z-index:3}
+.hv-3{width:34%;height:34%;right:0;bottom:0;z-index:1;opacity:.9}
+.hv-badge{
+  position:absolute;left:6%;top:14%;z-index:4;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);
+}
+.hv-badge b{font-family:var(--font-display);font-size:21px;color:var(--reddish-brown);display:block}
+.hv-badge span{font-size:10.5px;color:var(--grey-olive);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.hv-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--reddish-brown)}
+.hv-fallback svg{width:42%;height:42%;opacity:.5}
+
+/* --- stats band --- */
+.stats-band{background:var(--mahogany);color:var(--champagne)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);padding:38px 0}
+.sstat{padding:10px 30px;border-left:1px solid rgba(252,226,197,.18)}
+.sstat:first-child{border-left:none}
+.sstat b{font-family:var(--font-display);font-size:34px;font-weight:600;color:var(--gold);display:block;line-height:1.1;margin-bottom:8px}
+.sstat span{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;font-weight:600;line-height:1.4}
+
+/* --- sections --- */
+.section{padding:52px 0 10px}
+.section.tint{background:#F5F3F1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-bottom:52px;margin-top:42px}
+.sec-head{display:flex;align-items:flex-end;gap:18px;margin-bottom:24px}
+.sec-head .kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-d);font-weight:700;display:block;margin-bottom:8px}
+.sec-head h2{font-family:var(--font-display);font-size:clamp(22px,2.4vw,30px);font-weight:600;color:var(--mahogany);line-height:1.15}
+.sec-head p{font-size:13px;color:var(--grey-olive);margin-top:6px;max-width:520px}
+.sec-head .spacer{flex:1}
+.sec-head.center{position:relative;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.sec-head.center .kicker{margin-bottom:6px}
+.sec-head.center .see-all{position:absolute;right:0;top:50%;transform:translateY(-50%);border:1.5px solid rgba(171,69,49,.4);border-radius:999px;padding:9px 16px;background:#fff}
+.sec-head.center .see-all:hover{background:var(--champagne-soft);text-decoration:none}
+@media (max-width:760px){
+  .sec-head.center .see-all{position:static;transform:none;margin-top:4px}
+}
+.see-all{font-size:13px;font-weight:600;color:var(--reddish-brown);cursor:pointer;background:none;border:none;white-space:nowrap}
+.see-all:hover{text-decoration:underline}
+.arr{display:inline-block;transition:transform .22s ease}
+button:hover .arr,.dcard:hover .arr{transform:translateX(5px)}
+
+/* --- domain grid: BADE prominent cards (3 per row) --- */
+.domain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.dcard{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);cursor:pointer;overflow:hidden;
+  transition:transform .22s,box-shadow .22s,border-color .22s;display:flex;flex-direction:column;
+}
+.dcard:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--dc)}
+.dimg{height:168px;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--dc-soft),#fff)}
+.dimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.dcard:hover .dimg img{transform:scale(1.05)}
+.dimg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(66,30,24,0) 45%,rgba(66,30,24,.42) 100%);pointer-events:none}
+.dimg .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dc)}
+.dimg .fallback svg{width:66px;height:66px;opacity:.45}
+.dimg .badge{
+  position:absolute;left:14px;bottom:14px;z-index:2;width:46px;height:46px;border-radius:13px;
+  background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;color:var(--dc);
+  box-shadow:0 4px 14px rgba(66,30,24,.22);
+}
+.dimg .badge svg{width:25px;height:25px}
+.dbody{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.dbody h3{font-family:var(--font-display);font-size:18px;font-weight:600;line-height:1.3;color:var(--mahogany)}
+.dbody p{font-size:11.5px;color:var(--ink-soft);line-height:1.55;margin-top:6px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dfoot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line)}
+.dfoot .nums{font-size:12px;color:var(--grey-olive)}
+.dfoot .nums b{color:var(--mahogany)}
+.dfoot .go{font-size:13px;font-weight:700;color:var(--dc)}
+
+/* --- journey strip --- */
+.journey{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:14px;align-items:stretch}
+.jstep{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;position:relative}
+.jstep .num{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--gold-d);letter-spacing:.1em}
+.jstep h4{font-family:var(--font-display);font-size:16.5px;color:var(--mahogany);margin:7px 0 6px;font-weight:600}
+.jstep p{font-size:12px;color:var(--ink-soft);line-height:1.55}
+.jstep::after{content:'→';position:absolute;right:-15px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:18px;z-index:2}
+.jstep:last-of-type::after{content:''}
+.jcta{display:flex;align-items:center}
+.btn-primary{background:var(--reddish-brown);color:#fff;border:none;border-radius:12px;padding:15px 22px;font-size:14px;font-weight:600;white-space:nowrap;box-shadow:0 8px 22px rgba(171,69,49,.32)}
+.btn-primary:hover{background:var(--reddish-brown-d)}
+
+/* --- researchers --- */
+.fac-scroll{display:grid;grid-auto-flow:column;grid-auto-columns:248px;gap:14px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;transition:box-shadow .2s,border-color .2s}
+.fcard:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
+.fcard .photo{
+  width:54px;height:54px;border-radius:50%;overflow:hidden;margin-bottom:11px;
+  background:var(--dc-soft,#f3e7da);display:flex;align-items:center;justify-content:center;color:var(--dc,#AB4531);
+  border:2px solid var(--dc,#AB4531);
+}
+.fcard .photo img{width:100%;height:100%;object-fit:cover}
+.fcard .photo svg{width:30px;height:30px;opacity:.75}
+.fcard h4{font-size:14px;font-weight:600;line-height:1.35;color:var(--ink)}
+.fcard .meta{font-size:11px;color:var(--grey-olive);margin-top:3px;font-weight:500}
+.fcard .area{font-size:11px;color:var(--ink-soft);margin-top:8px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fcard .cnt{display:inline-block;margin-top:11px;font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 11px;background:var(--dc-soft,#f3e7da);color:var(--dc,#AB4531)}
+
+/* --- funders --- */
+.fund-row{display:flex;flex-wrap:wrap;gap:9px}
+.fund-chip{border:none;background:var(--pill);border-radius:999px;padding:8px 15px;font-size:12px;color:var(--pill-text);cursor:pointer;display:inline-flex;gap:8px;align-items:center;font-weight:500}
+.fund-chip b{color:var(--reddish-brown);font-size:11px}
+.fund-chip:hover{background:var(--champagne);color:var(--mahogany)}
+
+/* --- CTA band --- */
+.cta-band{background:linear-gradient(120deg,var(--reddish-brown) 0%,var(--mahogany-d) 100%);color:#fff;margin-top:52px}
+.cta-inner{display:flex;align-items:center;gap:28px;padding:38px 0;flex-wrap:wrap}
+.cta-inner h2{font-family:var(--font-display);font-size:clamp(21px,2.4vw,28px);font-weight:600;flex:1;min-width:280px;line-height:1.3}
+.cta-inner p{font-size:13px;opacity:.85;margin-top:6px;font-weight:400}
+.btn-light{background:var(--champagne);color:var(--mahogany);border:none;border-radius:12px;padding:14px 24px;font-size:14px;font-weight:700}
+.btn-light:hover{background:#fff}
+
+/* --- footer --- */
+footer{background:var(--mahogany);color:var(--champagne);padding:38px 0 26px}
+.foot-logo{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.foot-logo-chip{width:60px;height:60px;flex:none;display:flex;align-items:center;justify-content:center}
+.foot-logo-chip img{width:100%;height:100%;object-fit:contain}
+.foot-logo b{font-family:var(--font-display);font-size:15px;color:#fff;display:block;line-height:1.35}
+.foot-logo span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;font-weight:600}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px}
+.foot-grid h5{font-family:var(--font-display);font-size:15px;margin-bottom:12px;color:#fff;font-weight:600}
+.foot-grid p,.foot-grid li{font-size:12.5px;line-height:1.8;opacity:.82;list-style:none}
+.foot-grid li{cursor:pointer}.foot-grid li:hover{opacity:1;color:var(--gold)}
+.foot-base{border-top:1px solid rgba(252,226,197,.18);margin-top:28px;padding-top:16px;font-size:11.5px;opacity:.65;display:flex;justify-content:center;text-align:center;flex-wrap:wrap;gap:10px}
+
+
+/* --- domain card hover: top sub-domains preview --- */
+.dsubs{max-height:0;overflow:hidden;transition:max-height .28s ease;font-size:10.5px;color:var(--gold-d);font-weight:600;line-height:1.55}
+.dcard:hover .dsubs{max-height:52px;margin-top:7px}
+
+/* --- faculty directory page --- */
+#facdir{position:absolute;inset:0;overflow:auto;background:#fff;display:none}
+#facdir.active{display:block}
+.dir-hero{background:var(--champagne-soft);border-bottom:1px solid var(--line);padding:36px 0 28px}
+.dir-hero h1{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);color:var(--mahogany);font-weight:600}
+.dir-hero p{color:var(--ink-soft);font-size:13.5px;margin-top:8px;max-width:580px;line-height:1.65}
+.dir-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.dir-controls input,.dir-controls select{background:#fff;border:1px solid var(--line-strong);border-radius:10px;padding:10px 14px;font-size:13px;font-family:var(--font-body);color:var(--ink);outline:none}
+.dir-controls input{flex:1;min-width:220px}
+.dir-controls input:focus,.dir-controls select:focus{border-color:var(--reddish-brown);box-shadow:0 0 0 3px rgba(171,69,49,.12)}
+.dir-count{font-size:12px;color:var(--grey-olive);margin:20px 0 14px}
+.dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;padding-bottom:60px}
+.dir-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;transition:box-shadow .2s,border-color .2s}
+.dir-card:hover{box-shadow:var(--shadow);border-color:var(--line-strong)}
+.dir-top{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dir-photo{width:56px;height:56px;border-radius:50%;overflow:hidden;flex:none;border:2px solid var(--dc,#AB4531);background:var(--dc-soft,#F6E3DE);display:flex;align-items:center;justify-content:center;color:var(--dc,#AB4531)}
+.dir-photo img{width:100%;height:100%;object-fit:cover}
+.dir-photo svg{width:30px;height:30px;opacity:.75}
+.dir-top h4{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3}
+.dir-top .meta{font-size:11px;color:var(--grey-olive);margin-top:2px}
+.dir-domain{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--dc-soft,#F6E3DE);color:var(--dc,#AB4531)}
+.dir-contact{margin-top:11px;border-top:1px dashed var(--line);padding-top:11px;display:flex;flex-direction:column;gap:6px}
+.dir-contact a,.dir-contact span.row{font-size:12px;color:var(--ink-soft);text-decoration:none;display:flex;gap:8px;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dir-contact a:hover{color:var(--reddish-brown)}
+.dir-contact svg{flex:none}
+.dir-actions{display:flex;gap:8px;margin-top:13px}
+.dir-btn{flex:1;border:1px solid rgba(171,69,49,.4);background:#fff;color:var(--reddish-brown);border-radius:9px;padding:8px 10px;font-size:12px;font-weight:600}
+.dir-btn:hover{background:var(--champagne-soft)}
+.dir-btn.solid{background:var(--reddish-brown);color:#fff;border-color:var(--reddish-brown)}
+.dir-btn.solid:hover{background:var(--reddish-brown-d)}
+.contact-rows{display:flex;flex-direction:column;gap:8px}
+.contact-rows a,.contact-rows span.row{font-size:12.5px;color:var(--ink-soft);text-decoration:none;display:flex;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;transition:border-color .15s,background .15s,color .15s}
+.contact-rows a:hover{color:var(--reddish-brown);border-color:var(--gold);background:var(--champagne-soft)}
+.contact-rows svg{flex:none;color:var(--grey-olive-d)}
+.contact-rows a:hover svg{color:var(--reddish-brown)}
+
+/* ================ MAP VIEW ================ */
+#mapview{position:absolute;inset:0;display:none;background:radial-gradient(circle at 50% 42%,#fff 0%,var(--champagne-soft) 78%,#f6e8d8 100%)}
+#mapview.active{display:block}
+#graph-svg{width:100%;height:100%;display:block;cursor:default}
+.map-chrome{position:absolute;pointer-events:none;inset:0;z-index:20}
+.map-chrome > *{pointer-events:auto}
+.pill-btn{background:rgba(255,255,255,.95);border:1px solid var(--line);color:var(--ink);padding:9px 16px;border-radius:999px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 10px rgba(66,30,24,.08)}
+.pill-btn:hover{border-color:var(--reddish-brown)}
+#btn-back{position:absolute;top:16px;left:18px;padding:12px 22px;font-size:14.5px;font-weight:600;border-radius:10px}
+#mode-switch{position:absolute;top:16px;left:50%;transform:translateX(-50%);display:none;gap:7px}
+#mode-switch.show{display:flex}
+#mode-switch .pill-btn.on{background:var(--reddish-brown);color:#fff;border-color:var(--reddish-brown)}
+@media (max-width:640px){#mode-switch{top:auto;bottom:58px}}
+#history-box{position:absolute;top:16px;right:18px;text-align:right}
+#history-list{margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:12px;min-width:240px;display:none;overflow:hidden;box-shadow:var(--shadow);text-align:left}
+#history-list.open{display:block}
+.hist-item{padding:10px 14px;font-size:12.5px;cursor:pointer;display:flex;gap:9px;align-items:center;color:var(--ink-soft)}
+.hist-item:hover{background:var(--champagne-soft);color:var(--ink)}
+.hist-item .lvl{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);padding:2px 7px;border-radius:999px;flex:none}
+#breadcrumb{position:absolute;bottom:18px;left:18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:64vw}
+.crumb{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:14px;padding:7px 16px;font-size:14px;font-weight:500;color:var(--ink-soft);cursor:pointer;box-shadow:0 2px 10px rgba(66,30,24,.08);display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;text-align:left}
+.crumb-kind{font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;opacity:.55;margin-bottom:1px}
+.crumb-name{font-weight:600}
+.crumb:hover{color:var(--ink);border-color:var(--line-strong)}
+.crumb.current{color:#fff;background:var(--reddish-brown);border-color:var(--reddish-brown);font-weight:700;box-shadow:0 4px 14px rgba(171,69,49,.28)}
+.crumb-sep{color:var(--grey-olive);font-size:14px;font-weight:600}
+#btn-panel{position:absolute;bottom:16px;right:18px}
+#legend{position:absolute;top:70px;left:18px;display:flex;flex-direction:column;gap:6px}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--grey-olive-d)}
+.leg-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--grey-olive)}
+
+#side-panel{
+  position:absolute;top:0;right:0;bottom:0;width:min(520px,94vw);background:#fff;border-left:1px solid var(--line);
+  z-index:30;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+  box-shadow:-12px 0 34px rgba(66,30,24,.10);
+}
+#side-panel.open{transform:translateX(0)}
+.sp-hero{position:relative;height:178px;background:var(--sp-c,#AB4531);overflow:hidden;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.sp-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+/* layered overlay: brand wash + bottom fade for crisp text */
+.sp-hero::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,var(--sp-c,#AB4531) 0%,rgba(66,30,24,.30) 100%);mix-blend-mode:multiply;opacity:.85}
+.sp-hero::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(46,20,15,.10) 0%,rgba(46,20,15,.30) 45%,rgba(46,20,15,.82) 100%)}
+.sp-hero-txt{position:absolute;left:26px;right:58px;bottom:18px;z-index:2;color:#fff}
+.sp-hero-kind{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.34);padding:4px 10px;border-radius:999px;margin-bottom:9px;backdrop-filter:blur(3px)}
+.sp-hero-code{display:inline-block;margin-left:8px;vertical-align:middle;font-size:10px;letter-spacing:.1em;font-weight:800;color:#fff;background:rgba(20,8,5,.4);border:1px solid rgba(255,255,255,.45);padding:4px 10px;border-radius:999px;backdrop-filter:blur(3px)}
+.code-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--gold-d);background:rgba(201,148,58,.14);border:1px solid rgba(201,148,58,.42);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.sp-hero h2{font-family:var(--font-display);font-size:24.5px;line-height:1.2;font-weight:600;color:#fff;margin:0;text-shadow:0 1px 14px rgba(0,0,0,.4);letter-spacing:.005em}
+.sp-hero .cur{font-size:10.5px;opacity:.85;margin-top:6px;display:flex;align-items:center;gap:6px}
+.sp-hero .cur::before{content:'';width:13px;height:1.5px;background:var(--gold)}
+.sp-close{position:absolute;top:14px;right:14px;z-index:3;background:rgba(20,8,5,.34);border:1px solid rgba(255,255,255,.5);color:#fff;width:32px;height:32px;border-radius:50%;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s;backdrop-filter:blur(4px)}
+.sp-close:hover{background:rgba(20,8,5,.6);transform:rotate(90deg)}
+/* metric strip */
+.sp-stats{display:flex;flex-wrap:wrap;gap:8px;padding:14px 26px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--champagne-soft),#fff);flex:none}
+.sp-stat{display:inline-flex;align-items:baseline;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12px;color:var(--ink-soft);font-weight:500;box-shadow:0 1px 4px rgba(66,30,24,.05)}
+.sp-stat b{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--mahogany);line-height:1}
+.sp-stats .sp-stat:first-child{background:var(--mahogany);border-color:transparent;color:var(--champagne);box-shadow:0 2px 8px rgba(66,30,24,.22)}
+.sp-stats .sp-stat:first-child b{color:var(--gold)}
+/* status pill inside the stat strip (e.g. Active = green) */
+.sp-stat.sp-status{align-items:center;gap:7px;font-weight:700}
+.sp-stat.sp-status::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.sp-stat.sp-status.status-Active{background:rgba(31,158,87,.18);border-color:rgba(31,158,87,.4);color:#15803d}
+.sp-stat.sp-status.status-Closed{background:var(--pill);border-color:transparent;color:var(--pill-text)}
+.sp-lead{position:relative;font-size:14px;font-weight:500;color:var(--ink-soft);line-height:1.72;padding:15px 18px 15px 22px;background:linear-gradient(135deg,var(--champagne-soft) 0%,#fff 72%);border:1px solid rgba(201,148,58,.28);border-radius:12px}
+.sp-lead::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,var(--gold),var(--reddish-brown))}
+.sp-body{flex:1;overflow:auto;padding:24px 26px 40px;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.sp-body::-webkit-scrollbar{width:9px}
+.sp-body::-webkit-scrollbar-thumb{background:rgba(66,30,24,.22);border-radius:999px;border:2px solid #fff}
+.sp-body::-webkit-scrollbar-thumb:hover{background:rgba(66,30,24,.38)}
+.sp-sec{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.sp-sec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.sp-sec h5{display:flex;align-items:center;gap:9px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey-olive-d);margin-bottom:12px;font-weight:700}
+.sp-sec h5::before{content:'';width:14px;height:2px;background:var(--gold);border-radius:2px;flex:none}
+.sp-sec p{font-size:13.5px;line-height:1.72;color:var(--ink-soft)}
+.kv{display:grid;grid-template-columns:148px 1fr;gap:0;font-size:13px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kv dt{color:var(--grey-olive-d);padding:10px 14px;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;background:var(--champagne-soft);border-top:1px solid var(--line);display:flex;align-items:center}
+.kv dd{color:var(--mahogany);padding:10px 14px;font-weight:600;border-top:1px solid var(--line);display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.kv dt:first-of-type,.kv dd:first-of-type{border-top:none}
+.kv-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--pill);border:1px solid var(--line);border-radius:7px;padding:2px 9px;color:var(--ink);font-weight:600}
+.kv-tag{display:inline-block;background:rgba(201,148,58,.15);color:var(--gold-d);border:1px solid rgba(201,148,58,.42);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700}
+.kv-link{color:var(--reddish-brown);font-weight:700;cursor:pointer;display:inline-flex;align-items:center}
+.kv-link:hover{text-decoration:underline}
+.kv-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;flex:none}
+.chip-row{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:12px;color:var(--ink-soft);cursor:pointer;font-weight:500;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{background:var(--champagne-soft);color:var(--mahogany);border-color:var(--gold)}
+.chip.static{cursor:default;background:var(--pill);border-color:transparent;color:var(--pill-text)}.chip.static:hover{background:var(--pill);color:var(--pill-text);border-color:transparent}
+/* --- Key Application Areas: feature tiles --- */
+.app-areas{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.app-area{display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid rgba(201,148,58,.30);border-radius:12px;background:linear-gradient(135deg,var(--champagne-soft) 0%,#fff 80%);font-size:12.5px;font-weight:600;color:var(--mahogany);line-height:1.35;transition:border-color .18s,box-shadow .18s,transform .15s}
+.app-area:hover{border-color:var(--gold);box-shadow:0 4px 14px rgba(201,148,58,.16);transform:translateY(-1px)}
+.app-area .ic{flex:none;width:26px;height:26px;border-radius:8px;background:rgba(201,148,58,.16);color:var(--gold-d);display:flex;align-items:center;justify-content:center}
+.app-area .ic svg{width:15px;height:15px}
+.app-lead{position:relative;display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.7;color:var(--ink-soft);padding:14px 16px;border:1px solid rgba(201,148,58,.28);border-radius:12px;background:linear-gradient(135deg,var(--champagne-soft) 0%,#fff 72%)}
+.app-lead .ic{flex:none;width:30px;height:30px;border-radius:9px;background:rgba(201,148,58,.16);color:var(--gold-d);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.app-lead .ic svg{width:17px;height:17px}
+@media(max-width:760px){.app-areas{grid-template-columns:1fr}}
+/* --- funders & partners: premium highlighted block --- */
+.sp-funders{background:linear-gradient(140deg,var(--mahogany) 0%,var(--mahogany-d) 100%);border-radius:14px;padding:18px 18px 16px;box-shadow:0 8px 24px rgba(66,30,24,.18);position:relative;overflow:hidden}
+.sp-funders::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,148,58,.35),transparent 70%)}
+.sp-funders .fund-head{display:flex;align-items:center;gap:9px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:13px;position:relative;z-index:1}
+.sp-funders .fund-head::before{content:'';width:14px;height:2px;background:var(--gold);border-radius:2px;flex:none}
+.funder-chip-row{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1}
+.funder-chip{display:inline-flex;align-items:center;gap:7px;background:rgba(252,226,197,.12);border:1px solid rgba(201,148,58,.45);color:var(--champagne);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;backdrop-filter:blur(2px)}
+.funder-chip::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none}
+.list-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:9px;cursor:pointer;background:#fff;position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .15s}
+.list-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transform-origin:center;transition:transform .2s}
+.list-item:hover{border-color:var(--line-strong);box-shadow:0 4px 14px rgba(66,30,24,.10);transform:translateX(2px)}
+.list-item:hover::before{transform:scaleY(1)}
+.li-ava{width:36px;height:36px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;border:1.5px solid;background:#fff;overflow:hidden}
+.li-ava svg{width:19px;height:19px;opacity:.8}
+.li-main{flex:1;min-width:0}
+.li-main b{font-size:14px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.li-main span{font-size:11.5px;color:var(--grey-olive);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li-count{font-size:11px;color:var(--ink-soft);flex:none;background:var(--pill);border-radius:999px;padding:3px 10px;font-weight:600}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:10px;padding:4px 11px;border-radius:999px;font-weight:700;flex:none}
+.status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.status-Active{background:rgba(31,158,87,.18);color:#15803d}
+.status-Closed{background:var(--pill);color:var(--pill-text)}
+/* status meaning note under the details table */
+.home-link{display:inline-flex;gap:7px;align-items:center;font-size:12px;font-weight:600;color:var(--reddish-brown);text-decoration:none;border:1px solid rgba(171,69,49,.4);padding:7px 14px;border-radius:999px}
+.home-link:hover{background:var(--champagne-soft)}
+
+.glink{fill:none;stroke:rgba(122,84,60,.32);stroke-width:1}
+.glink.dim{opacity:.12}
+.glink.lit{opacity:1;stroke:rgba(146,53,36,.8);stroke-width:1.6}
+.gnode{cursor:pointer}
+/* paint-order:stroke -> har label ke peeche safed halo, taaki lines/dots/aas-paas
+   ke labels par chadhe bhi to text readable rahe (collision-proof legibility) */
+.gnode text{font-family:var(--font-body);fill:var(--ink);pointer-events:none;paint-order:stroke;stroke:var(--white);stroke-width:3px;stroke-linejoin:round;stroke-linecap:round}
+.glabel-sub{fill:var(--ink-soft) !important;font-weight:600}
+.center-name{font-family:var(--font-display);font-weight:600;fill:var(--mahogany);text-anchor:middle;stroke-width:2.2px}
+.ring-guide{fill:none;stroke:rgba(66,30,24,.14);stroke-dasharray:2 6}
+.ring-outer{fill:none;stroke:rgba(66,30,24,.30);stroke-width:2}
+.r1-label{font-weight:600;font-size:13.5px;fill:var(--ink);letter-spacing:.005em}
+.r1-count{font-size:11.5px;fill:var(--grey-olive-d);font-weight:500;letter-spacing:.01em}
+.r2-label{fill:#3d3d3d}
+#tooltip{position:absolute;background:#fff;border:1px solid var(--line-strong);border-radius:10px;padding:9px 13px;font-size:12px;pointer-events:none;display:none;z-index:50;max-width:270px;box-shadow:var(--shadow)}
+#tooltip b{display:block;font-size:12.5px;color:var(--mahogany)}
+#tooltip span{color:var(--grey-olive-d);font-size:11px}
+.dotgrid{position:absolute;inset:0;pointer-events:none;opacity:.5}
+
+
+/* --- research pulse --- */
+.pulse-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pulse-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
+.pulse-card h4{font-family:var(--font-display);font-size:17px;color:var(--mahogany);margin-bottom:10px;font-weight:600}
+.prow{display:flex;align-items:center;gap:12px;padding:9px 0;cursor:pointer;border-top:1px dashed var(--line)}
+.prow:first-of-type{border-top:none}
+.prow .nm{flex:1;font-size:13px;font-weight:500;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow:hover .nm{color:var(--reddish-brown)}
+.prow .bar{flex:none;width:118px;height:7px;border-radius:999px;background:var(--pill);overflow:hidden}
+.prow .bar i{display:block;height:100%;border-radius:999px}
+.prow b{font-size:12.5px;color:var(--mahogany);width:32px;text-align:right;font-weight:700}
+
+/* --- audience cards --- */
+.aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.aud-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:10px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.aud-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+.aud-card .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:var(--champagne-soft);color:var(--reddish-brown)}
+.aud-card .ic svg{width:24px;height:24px}
+.aud-card h4{font-family:var(--font-display);font-size:18px;color:var(--mahogany);font-weight:600}
+.aud-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.65;flex:1}
+.aud-btn{align-self:flex-start;border:1px solid rgba(171,69,49,.45);background:#fff;color:var(--reddish-brown);border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:600}
+.aud-btn:hover{background:var(--champagne-soft)}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width:1280px){
+  .domain-grid{grid-template-columns:repeat(3,1fr)}
+  .wrap{padding:0 40px}
+}
+@media (max-width:1140px){
+  .hdr-search{display:none}            /* search hide -> nav-tabs ke saath overlap na ho */
+}
+@media (max-width:1080px){
+  .pulse-grid,.aud-grid{grid-template-columns:1fr}
+  .domain-grid{grid-template-columns:repeat(2,1fr)}
+  .journey{grid-template-columns:repeat(2,1fr)}
+  .jstep::after{content:''}
+  .hero-grid{grid-template-columns:1fr;gap:30px;padding:54px 0 50px}
+  .hero-visual{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr);row-gap:28px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+/* tablets + small laptops */
+@media (max-width:960px){
+  .wrap{padding:0 32px}
+  .section{padding:42px 0 8px}
+  header{gap:12px;padding:10px 18px}
+  .nav-tabs{justify-content:flex-end;flex:1}
+  .nav-tab{padding:8px 11px;font-size:13px}
+}
+@media (max-width:760px){
+  .nav-tabs{display:none}              /* phone: top tabs hide; logo=home, landing links se navigate */
+  /* side panel = bottom sheet (map upar dikhta rahe) */
+  #side-panel{top:auto;left:0;right:0;bottom:0;width:100%;height:74vh;max-height:74vh;overflow:hidden;
+    border-left:none;border-top:1px solid var(--line);border-radius:20px 20px 0 0;
+    transform:translateY(100%);box-shadow:0 -10px 34px rgba(66,30,24,.20)}
+  #side-panel.open{transform:translateY(0)}
+  #side-panel::before{content:'';display:block;flex:none;width:42px;height:5px;border-radius:999px;
+    background:rgba(66,30,24,.22);margin:8px auto 0}
+  .sp-hero{height:140px}
+  .sp-stats{padding:12px 18px}
+  .sp-body{padding:20px 18px 36px}
+  .sp-hero-txt{left:18px;right:50px}
+  /* map controls: top row + bottom row, koi overlap nahi */
+  #btn-back{top:12px;left:12px}
+  #history-box{top:12px;right:12px}
+  #btn-back,#btn-panel,#history-box .pill-btn{padding:8px 13px;font-size:12px}
+  #btn-panel{bottom:12px}
+  #breadcrumb{bottom:12px;left:12px;right:104px;max-width:none;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #breadcrumb::-webkit-scrollbar{display:none}
+  .crumb{padding:7px 13px;font-size:12.5px;flex:none}
+  .crumb-sep{font-size:13px}
+}
+@media (max-width:640px){
+  .wrap{padding:0 18px}
+  .domain-grid,.journey{grid-template-columns:1fr}
+  #legend{display:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr);padding:30px 0}
+  .sstat{padding:10px 16px}
+  .foot-grid{grid-template-columns:1fr}
+  .section{padding:34px 0 6px}
+  .hero-grid{padding:40px 0 36px}
+  .hero .lede{font-size:14.5px}
+  .hdr-cta{padding:9px 14px;font-size:12.5px}
+  .dir-controls{gap:8px}
+  .dir-controls input{min-width:100%}
+  .dir-grid{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  header{padding:9px 12px;gap:8px}
+  .logo-mark{width:38px;height:38px}
+  .logo-name{font-size:15px}
+  .logo-inst{display:none}
+  .hero h1{font-size:26px}
+  .sstat b{font-size:28px}
+  .sp-hero h2{font-size:21px}
+}
+/* touch scroll momentum on scrollable areas */
+#discover,#facdir,.sp-body,.fac-scroll,.dir-grid{-webkit-overflow-scrolling:touch}
+#data-loader{position:fixed;inset:0;z-index:200;background:linear-gradient(180deg,var(--champagne-soft),#fff);display:flex;align-items:center;justify-content:center;text-align:center}
+#data-loader.gone{display:none}
+#data-loader.error{background:#fff}
+.dl-box{max-width:440px;padding:30px}
+.dl-box h3{font-family:var(--font-display);font-size:21px;color:var(--mahogany);font-weight:600;margin-bottom:8px}
+.dl-box p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.dl-box #dl-retry{margin-top:18px;background:var(--reddish-brown);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:13.5px;font-weight:600}
+.dl-spin{width:44px;height:44px;border:4px solid var(--champagne);border-top-color:var(--reddish-brown);border-radius:50%;margin:0 auto 22px;animation:dlspin .8s linear infinite}
+@keyframes dlspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}.dl-spin{animation:dlspin 1.2s linear infinite}}
+
+/* ================= FACULTY GUIDED NAV ================= */
+#mapview.facnav #legend,#mapview.facnav #history-box,#mapview.facnav #mode-switch,#mapview.facnav #btn-panel{display:none!important}
+#fac-hub{position:absolute;inset:0;z-index:24;pointer-events:none;display:none}
+#mapview.facnav #fac-hub{display:block}
+#fac-hub>*{pointer-events:auto}
+.fnav{position:absolute;top:14px;left:50%;transform:translateX(-50%);max-width:min(94vw,1000px);
+  background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 10px 30px rgba(66,30,24,.14);backdrop-filter:blur(8px);padding:11px 14px;
+  display:flex;flex-direction:column;gap:9px}
+.fnav-top{display:flex;align-items:center;gap:14px}
+.fnav-id{display:flex;align-items:center;gap:9px;flex:none}
+.fnav-id .av{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--reddish-brown);background:var(--champagne-soft);display:flex;align-items:center;justify-content:center;color:var(--reddish-brown);flex:none}
+.fnav-id .av img{width:100%;height:100%;object-fit:cover}.fnav-id .av svg{width:18px;height:18px;fill:currentColor}
+.fnav-id .who b{font-size:13px;color:var(--mahogany);font-weight:700;display:block;line-height:1.1;font-family:var(--font-display)}
+.fnav-id .who span{font-size:10px;color:var(--grey-olive);display:block;margin-top:1px}
+.fnav-cap{flex:1;text-align:center;font-size:12px;color:var(--ink-soft);font-weight:600;min-width:0}
+.fnav-cap b{color:var(--mahogany)}
+.fnav-legend{display:flex;gap:10px;flex:none}
+.fnav-legend .li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--grey-olive-d);font-weight:600}
+.fnav-legend .li i{width:9px;height:9px;border-radius:50%}
+.fnav-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-top:9px;border-top:1px solid var(--line)}
+.fnav-row.subs{padding-top:8px;border-top:1px dashed var(--line)}
+.fnav-lbl{font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--grey-olive-d);font-weight:700;flex:none;margin-right:3px}
+.dtab{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.dtab .dt-dot{width:9px;height:9px;border-radius:50%;background:var(--dc,#8A5A33);flex:none}
+.dtab b{font-weight:800;color:var(--grey-olive-d)}
+.dtab:hover{border-color:var(--dc,var(--reddish-brown));background:var(--champagne-soft)}
+.dtab.on{background:var(--dc,var(--mahogany));border-color:var(--dc,var(--mahogany));color:#fff;box-shadow:0 3px 10px rgba(66,30,24,.2)}
+.dtab.on .dt-dot{background:#fff}.dtab.on b{color:rgba(255,255,255,.85)}
+.schip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;display:inline-flex;gap:6px;align-items:center;transition:background .15s,border-color .15s,color .15s}
+.schip b{color:var(--gold-d);font-weight:800}
+.schip:hover{border-color:var(--gold);background:var(--champagne-soft)}
+.schip.on{background:var(--reddish-brown);border-color:var(--reddish-brown);color:#fff}.schip.on b{color:rgba(255,255,255,.85)}
+.fnav-hint{font-size:11px;color:var(--grey-olive)}
+@media (max-width:760px){
+  .fnav{top:58px;max-width:calc(100vw - 16px);padding:9px 11px}
+  .fnav-top{flex-wrap:wrap;gap:8px}.fnav-cap{order:3;flex-basis:100%;text-align:left}.fnav-legend{order:2}
+  .fnav-row{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .fnav-row::-webkit-scrollbar{display:none}
+  #mapview.facnav #btn-back{top:12px;left:12px}
+}
+
+/* ================= FACULTY 360° DASHBOARD ================= */
+#facdash{position:absolute;inset:0;overflow:auto;background:#F3EFEA;display:none;-webkit-overflow-scrolling:touch}
+#facdash.active{display:block}
+.fd-wrap{max-width:1240px;margin:0 auto;padding:0 26px 60px}
+.fd-status{--c:#8A8079}.fd-status.active{--c:#1F9E57}.fd-status.ongoing{--c:#D08A2E}.fd-status.done{--c:#8A8079}
+/* hero */
+.fd-hero{position:relative;margin:20px 0 0;border-radius:20px;overflow:hidden;background:linear-gradient(120deg,var(--reddish-brown) 0%,var(--mahogany) 100%);color:#fff;padding:26px 30px;box-shadow:0 16px 40px rgba(66,30,24,.2)}
+.fd-hero::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(201,148,58,.3),transparent 70%)}
+.fd-back{position:absolute;top:18px;left:18px;z-index:2;background:rgba(20,8,5,.28);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;padding:7px 15px;font-size:12.5px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
+.fd-back:hover{background:rgba(20,8,5,.5)}
+.fd-hero-in{position:relative;z-index:1;display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.fd-photo{width:92px;height:92px;border-radius:50%;flex:none;border:3px solid rgba(255,255,255,.5);background:rgba(255,255,255,.14);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.fd-photo img{width:100%;height:100%;object-fit:cover}.fd-photo svg{width:46px;height:46px;fill:rgba(255,255,255,.9)}
+.fd-hid{flex:1;min-width:240px}
+.fd-kind{font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--champagne);opacity:.9}
+.fd-hid h1{font-family:var(--font-display);font-size:clamp(24px,3vw,34px);font-weight:600;line-height:1.12;margin:5px 0 4px}
+.fd-hid .meta{font-size:13.5px;opacity:.9}
+.fd-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.fd-act{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.34);color:#fff;border-radius:10px;padding:8px 14px;font-size:12.5px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .15s}
+.fd-act:hover{background:rgba(255,255,255,.26)}
+.fd-act svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7}
+.fd-act.gold{background:var(--gold);border-color:var(--gold);color:#3a2410}.fd-act.gold:hover{background:#dba652}
+.fd-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;position:relative;z-index:1}
+.fd-tag{font-size:11px;font-weight:600;background:rgba(252,226,197,.16);border:1px solid rgba(252,226,197,.4);color:var(--champagne);border-radius:999px;padding:4px 11px}
+/* kpi */
+.fd-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:18px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 12px;box-shadow:0 4px 14px rgba(66,30,24,.05);
+  display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;font-family:inherit;
+  transition:transform .14s,box-shadow .14s,border-color .14s}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(66,30,24,.13);border-color:var(--line-strong)}
+.kpi:active{transform:translateY(-1px)}
+.kpi.sel{border-color:var(--reddish-brown);box-shadow:0 0 0 2px rgba(171,69,49,.2)}
+.kpi .kpi-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:var(--champagne-soft);color:var(--reddish-brown);margin-bottom:10px}
+.kpi .kpi-ic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}
+.kpi b{font-family:var(--font-display);font-size:27px;font-weight:600;color:var(--mahogany);display:block;line-height:1}
+.kpi span{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--grey-olive-d);font-weight:700;display:block;margin-top:7px}
+.kpi.act b{color:#1F9E57}.kpi.ong b{color:#D08A2E}.kpi.don b{color:#8A8079}.kpi.gold b{color:var(--gold-d)}
+.kpi.act .kpi-ic{background:rgba(31,158,87,.14);color:#1F9E57}
+.kpi.ong .kpi-ic{background:rgba(208,138,46,.16);color:#D08A2E}
+.kpi.don .kpi-ic{background:rgba(138,128,121,.16);color:#8A8079}
+.kpi.gold .kpi-ic{background:rgba(201,148,58,.16);color:var(--gold-d)}
+/* section card */
+.fd-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 6px 18px rgba(66,30,24,.05)}
+.card h3{font-family:var(--font-display);font-size:16px;color:var(--mahogany);font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card .sub{font-size:11.5px;color:var(--grey-olive);margin-bottom:14px}
+.card.full{grid-column:1/-1}
+/* bar list */
+.db-bar{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:9px;cursor:pointer;transition:background .12s}
+.db-bar:hover{background:var(--champagne-soft)}
+.db-bar.on{background:var(--champagne-soft);box-shadow:inset 0 0 0 1px rgba(201,148,58,.4)}
+.db-bl{flex:0 0 132px;font-size:12px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.db-track{flex:1;height:9px;border-radius:999px;background:var(--pill);overflow:hidden}
+.db-track i{display:block;height:100%;border-radius:999px}
+.db-bar b{flex:none;width:26px;text-align:right;font-size:12.5px;font-weight:700;color:var(--mahogany)}
+/* donut */
+.db-donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.db-donut{width:140px;height:140px;flex:none}
+.dd-num{font-family:var(--font-display);font-size:26px;font-weight:700;fill:var(--mahogany)}
+.dd-lbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;fill:var(--grey-olive-d);font-weight:700}
+.db-leg{display:flex;flex-direction:column;gap:8px}
+.db-leg .li{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);font-weight:500}
+.db-leg .li i{width:11px;height:11px;border-radius:3px;flex:none}
+.db-leg .li b{color:var(--mahogany);margin-left:auto;padding-left:14px}
+/* project toolbar + list */
+.pj-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.pj-search{flex:1;min-width:190px;position:relative}
+.pj-search input{width:100%;background:#fff;border:1px solid var(--line-strong);border-radius:10px;padding:9px 12px 9px 32px;font-size:13px;font-family:var(--font-body);color:var(--ink);outline:none}
+.pj-search input:focus{border-color:var(--reddish-brown);box-shadow:0 0 0 3px rgba(171,69,49,.12)}
+.pj-search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--grey-olive)}
+.pj-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:700;color:var(--ink-soft);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.pj-chip .dot{width:7px;height:7px;border-radius:50%}
+.pj-chip.on{background:var(--mahogany);color:#fff;border-color:var(--mahogany)}
+.pj-clear{font-size:11.5px;font-weight:600;color:var(--reddish-brown);cursor:pointer;border:none;background:none}
+.pj-clear:hover{text-decoration:underline}
+.pj-count{font-size:11.5px;color:var(--grey-olive);margin-bottom:10px}
+.pj-list{display:flex;flex-direction:column;gap:8px}
+.pj{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.pj:hover{border-color:var(--line-strong);box-shadow:0 4px 12px rgba(66,30,24,.07)}
+.pj-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;position:relative}
+.pj-head::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--c,#8A8079)}
+.pj-main{flex:1;min-width:0}
+.pj-main b{font-size:13.5px;font-weight:600;color:var(--ink);display:block;line-height:1.3}
+.pj-main span{font-size:11px;color:var(--grey-olive);display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pj-ft{font-size:10px;font-weight:700;color:var(--gold-d);background:rgba(201,148,58,.13);border:1px solid rgba(201,148,58,.36);border-radius:6px;padding:3px 8px;flex:none}
+.pj-st{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;flex:none;background:color-mix(in srgb,var(--c) 16%,#fff);color:var(--c)}
+.pj-st::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.pj-chev{color:var(--grey-olive);font-size:12px;flex:none;transition:transform .2s}
+.pj.open .pj-chev{transform:rotate(180deg)}
+.pj-body{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.pj.open .pj-body{max-height:260px}
+.pj-body-in{padding:2px 14px 14px 29px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.pj-kv{font-size:12px}.pj-kv dt{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey-olive-d);font-weight:700;margin-bottom:3px}
+.pj-kv dd{color:var(--mahogany);font-weight:600}
+.pj-kv dd .lnk{color:var(--reddish-brown);cursor:pointer}.pj-kv dd .lnk:hover{text-decoration:underline}
+.pj-empty{padding:26px;text-align:center;color:var(--grey-olive);font-size:13px}
+/* funders + collab + optional */
+.fund-list{display:flex;flex-direction:column;gap:8px}
+.fund-item{display:flex;align-items:center;gap:11px;padding:8px 4px;cursor:pointer;border-radius:9px}
+.fund-item:hover{background:var(--champagne-soft)}
+.fund-item.on{background:var(--champagne-soft)}
+.fund-item .nm{flex:1;font-size:12.5px;font-weight:600;color:var(--ink)}
+.fund-item .bar{flex:0 0 90px;height:8px;border-radius:999px;background:var(--pill);overflow:hidden}
+.fund-item .bar i{display:block;height:100%;background:var(--gold);border-radius:999px}
+.fund-item b{font-size:12px;color:var(--mahogany);width:22px;text-align:right}
+.collab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.collab{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:12px;padding:11px 13px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s}
+.collab:hover{border-color:var(--gold);box-shadow:0 4px 12px rgba(66,30,24,.08)}
+.collab .av{width:38px;height:38px;border-radius:50%;flex:none;border:2px solid var(--reddish-brown);background:var(--champagne-soft);display:flex;align-items:center;justify-content:center;color:var(--reddish-brown);overflow:hidden}
+.collab .av img{width:100%;height:100%;object-fit:cover}.collab .av svg{width:20px;height:20px;fill:currentColor}
+.collab .nm b{font-size:12.5px;color:var(--ink);display:block;font-weight:600;line-height:1.2}
+.collab .nm span{font-size:10.5px;color:var(--grey-olive)}
+.opt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.opt{border:1px solid rgba(201,148,58,.3);border-radius:12px;padding:14px 16px;background:linear-gradient(135deg,var(--champagne-soft),#fff 80%)}
+.opt b{font-family:var(--font-display);font-size:20px;color:var(--mahogany);display:block}
+.opt span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-d);font-weight:700;display:block;margin-top:5px}
+.opt.txt b{font-size:13.5px;font-weight:600;line-height:1.4}
+@media (max-width:900px){.fd-grid{grid-template-columns:1fr}}
+@media (max-width:640px){.fd-wrap{padding:0 14px 50px}.fd-hero{padding:22px 18px}.db-bl{flex-basis:100px}}
+
+/* ---- dashboard polish (clarity for first-time users) ---- */
+.dash-hint{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 15px;background:linear-gradient(90deg,var(--champagne-soft),#fff 92%);border:1px solid rgba(201,148,58,.28);border-radius:12px;font-size:12.5px;color:var(--ink-soft);font-weight:500}
+.dash-hint b{color:var(--mahogany);font-weight:700}
+.dash-hint .hi{width:24px;height:24px;border-radius:7px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.dash-hint .hi svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2}
+@keyframes flashcard{0%{box-shadow:0 0 0 0 rgba(201,148,58,.55)}100%{box-shadow:0 0 0 12px rgba(201,148,58,0)}}
+.flash{animation:flashcard 1s ease-out}
+.pj{transition:transform .14s,box-shadow .14s,border-color .14s}
+.pj:hover{border-color:var(--reddish-brown);box-shadow:0 8px 20px rgba(66,30,24,.1);transform:translateY(-2px)}
+.pj-head{padding:13px 15px 13px 14px}
+.pj-dom-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.pj-more{font-size:9.5px;font-weight:800;color:var(--reddish-brown);letter-spacing:.06em;text-transform:uppercase;flex:none;opacity:0;transition:opacity .15s;white-space:nowrap}
+.pj:hover .pj-more{opacity:1}.pj.open .pj-more{opacity:0}
+.pj-body-in .pj-kv{background:var(--champagne-soft);border-radius:9px;padding:9px 11px}
+.fd-act{transition:transform .12s,background .15s}.fd-act:hover{transform:translateY(-1px)}
+.db-leg .li{border-radius:7px;padding:3px 5px;transition:background .12s}.db-leg .li:hover{background:var(--champagne-soft)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo" onclick="goDiscover()">
+      <div class="logo-mark">
+        <img id="iitk-logo" alt="IIT Kanpur" style="width:100%;height:100%;object-fit:contain">
+      </div>
+      <div><div class="logo-name">SYNAPSE<span> NEXUS</span></div><span class="logo-inst">IIT Kanpur · Research Intelligence</span></div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" id="tab-discover" onclick="goDiscover()">Home</button>
+      <button class="nav-tab" onclick="goDiscover();setTimeout(()=>document.getElementById('sec-domains').scrollIntoView({behavior:'smooth'}),60)">Domains</button>
+      <button class="nav-tab" id="tab-dir" onclick="showFacultyDir()">Faculty</button>
+      <button class="nav-tab" id="tab-map" onclick="openLastMap()"></button>
+    </nav>
+    <div class="hdr-search">
+      <span class="icon">⌕</span>
+      <input id="hsearch" type="text" placeholder="Search domains, faculty, projects or funders…" autocomplete="off">
+      <div class="search-results" id="hsearch-results"></div>
+    </div>
+    <button class="hdr-cta" id="btn-refresh" onclick="tryLoadExternal(true)" title="Reload latest data from Google Sheet" style="background:var(--grey-olive)">↻ Refresh</button>
+  </header>
+
+  <main>
+  <!-- ================= LANDING ================= -->
+  <section id="discover">
+    <div class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Electrical Engineering · Sustainable Energy Engineering</span>
+          <h1>Every researcher, every project — <em>one map.</em></h1>
+          <p class="lede">Explore IIT Kanpur's research landscape across domains, faculty and funding partners — visualised as one connected knowledge map.</p>
+          <div class="hero-cta">
+            <button class="btn-primary" onclick="document.getElementById('sec-domains').scrollIntoView({behavior:'smooth'})">Explore research domains <span class="arr">→</span></button>
+            <button class="btn-ghost" onclick="showFacultyDir()">Browse faculty</button>
+          </div>
+        </div>
+        <div class="hero-visual" id="hero-visual"></div>
+      </div>
+    </div>
+
+    <div class="stats-band"><div class="wrap stats-grid" id="hero-stats"></div></div>
+
+    <div class="section" id="sec-domains">
+      <div class="wrap">
+        <div class="sec-head center">
+          <div><span class="kicker">Explore</span>
+          <h2>Research domains</h2></div>
+        </div>
+        <div class="domain-grid" id="domain-grid"></div>
+      </div>
+    </div>
+
+    <div class="section tint" id="sec-fac">
+      <div class="wrap">
+        <div class="sec-head center">
+          <div><span class="kicker">People</span>
+          <h2>Most active researchers</h2></div>
+          <button class="see-all" onclick="showFacultyDir()">Full faculty directory <span class="arr">→</span></button>
+        </div>
+        <div class="fac-scroll" id="fac-scroll"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="wrap">
+        <div class="sec-head center">
+          <div><span class="kicker">Research pulse</span>
+          <h2>Where the activity is</h2></div>
+        </div>
+        <div class="pulse-grid">
+          <div class="pulse-card"><h4>Most active sub-domains</h4><div id="pulse-subs"></div></div>
+          <div class="pulse-card"><h4>Top funding partners</h4><div id="pulse-funds"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <footer><div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="foot-logo">
+            <span class="foot-logo-chip"><img id="iitk-logo-foot" alt="IIT Kanpur"></span>
+            <div><b>Indian Institute of Technology Kanpur</b><span>Synapse Nexus · Research Intelligence</span></div>
+          </div>
+          <p>Research intelligence portal — domains, people and projects across EE &amp; SEE.</p></div>
+        <div><h5>Research domains</h5><ul id="foot-domains"></ul></div>
+        <div><h5>Portal</h5><ul>
+          <li onclick="openLastMap()">Knowledge Map</li>
+          <li onclick="document.getElementById('sec-fac').scrollIntoView({behavior:'smooth'})">Researchers</li>
+          <li onclick="document.getElementById('sec-domains').scrollIntoView({behavior:'smooth'})">Domains</li>
+        </ul></div>
+      </div>
+      <div class="foot-base"><span>© Indian Institute of Technology Kanpur</span></div>
+    </div></footer>
+  </section>
+
+  <!-- ================= FACULTY DIRECTORY ================= -->
+  <section id="facdir">
+    <div class="dir-hero"><div class="wrap">
+      <span class="eyebrow">People</span>
+      <h1>Faculty directory</h1>
+      <p>EE &amp; SEE faculty — contacts, profiles and research areas.</p>
+      <div class="dir-controls">
+        <input id="dir-q" type="text" placeholder="Search by name or research area…" autocomplete="off">
+        <select id="dir-dept"><option value="">All departments</option></select>
+        <select id="dir-dom"><option value="">All domains</option></select>
+        <select id="dir-sort"><option value="name">Sort: A–Z</option><option value="name-desc">Sort: Z–A</option></select>
+      </div>
+    </div></div>
+    <div class="wrap"><div class="dir-count" id="dir-count"></div><div class="dir-grid" id="dir-grid"></div></div>
+  </section>
+
+  <!-- ================= FACULTY 360° DASHBOARD ================= -->
+  <section id="facdash"><div id="facdash-body"></div></section>
+
+  <!-- ================= MAP ================= -->
+  <section id="mapview">
+    <canvas class="dotgrid" id="dots"></canvas>
+    <svg id="graph-svg"></svg>
+    <div class="map-chrome">
+      <button class="pill-btn" id="btn-back" onclick="goBack()">← Back</button>
+      <div id="mode-switch">
+        <button class="pill-btn" id="ms-fac">Faculty wise</button>
+        <button class="pill-btn" id="ms-dept">Department wise</button>
+      </div>
+      <div id="history-box">
+        <button class="pill-btn" onclick="toggleHistory(event)">History ▾</button>
+        <div id="history-list"></div>
+      </div>
+      <div id="legend"></div>
+      <div id="breadcrumb"></div>
+      <button class="pill-btn" id="btn-panel" onclick="togglePanel()">Hide panel →</button>
+    </div>
+    <div id="side-panel"></div>
+    <div id="tooltip"></div>
+    <div id="fac-hub"></div>
+  </section>
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   SYNAPSE NEXUS — SHEET-ONLY BUILD
+   ========================================================= */
+const DB = {"domains": [], "subdomains": [], "faculty": [], "projects": []};
+
+/* Earthy domain accents derived from the brand palette */
+const COLORS={D1:'#AB4531',D2:'#C9943A',D3:'#67705F',D4:'#4F7A5B',D5:'#6F5B82',D6:'#A85D75',D7:'#3E7C7C',D8:'#8A5A33'};
+const SOFT  ={D1:'#F6E3DE',D2:'#F6ECD9',D3:'#E9ECE6',D4:'#E2EEE6',D5:'#ECE6F2',D6:'#F4E3EA',D7:'#DFEEEE',D8:'#F0E4D8'};
+
+/* =====================================================================
+   ▼▼▼  IMAGE PATHS — YAHAN BADALNI HAIN (abhi temporary stock images)  ▼▼▼
+   ---------------------------------------------------------------------
+   Har domain (D1–D8) ke aage uski image ka path/URL hai. Jab aapke paas
+   asli IIT Kanpur images aa jaayein, neeche har line me URL/path replace
+   kar dena — poora portal yahin se image uthata hai (domain cards, map ka
+   centre, side-panel hero), sab apne aap update ho jaayenge.
+   Example local file:  D1:'images/ai.jpg'
+   Example URL:         D1:'https://.../photo.jpg'
+   ===================================================================== */
+const DOMAIN_IMG={
+  D1:'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=60',  /* AI — YAHAN image path change karein */
+  D2:'https://images.unsplash.com/photo-1516044734145-07ca8eef8731?auto=format&fit=crop&w=800&q=60',  /* Communications — YAHAN image path change karein */
+  D3:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=60',  /* Power infra — YAHAN image path change karein */
+  D4:'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=60',  /* E-mobility — YAHAN image path change karein */
+  D5:'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=60',  /* Microelectronics — YAHAN image path change karein */
+  D6:'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=60',  /* Quantum/physics — YAHAN image path change karein */
+  D7:'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=60',  /* Solar — YAHAN image path change karein */
+  D8:'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=60'   /* Robotics — YAHAN image path change karein */
+};
+/* ▼ HERO (banner) ki 3 images — YAHAN change karein (right-side collage) ▼ */
+const HERO_IMG=[
+  'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=60',     /* hero image 1 — YAHAN path change karein */
+  'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=700&q=60',        /* hero image 2 — YAHAN path change karein */
+  'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=60'      /* hero image 3 — YAHAN path change karein */
+];
+/* ▲▲▲  IMAGE PATHS END  ▲▲▲
+   Note: Faculty ki photos alag se Google Sheet ke 'Photo URL' column se aati hain (yahan nahi).
+   Logo ke liye neeche IITK_LOGO_SOURCES dekhein. */
+
+const ICONS={
+ D1:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="2.1"/><circle cx="19" cy="5" r="2.1"/><circle cx="19" cy="19" r="2.1"/><circle cx="12" cy="12" r="2.6"/><path d="M7 11.3l2.5-.6M14.4 10.6L17 6.6M14.4 13.4L17 17.4M7.1 12.7l2.4.5"/></svg>',
+ D2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21V11"/><circle cx="12" cy="9" r="2.2"/><path d="M7.5 4.8a8 8 0 0 0 0 8.4M16.5 4.8a8 8 0 0 1 0 8.4M5 2.5a12 12 0 0 0 0 13M19 2.5a12 12 0 0 1 0 13" stroke-linecap="round"/></svg>',
+ D3:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3h6l-2.2 6H17L8.5 21l2-8H6L9 3z" stroke-linejoin="round"/></svg>',
+ D4:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="15" height="10" rx="2"/><path d="M21 11v4M10.8 10l-2 3h3l-2 3" stroke-linejoin="round"/><path d="M7 5.5h7"/></svg>',
+ D5:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="10.2" y="10.2" width="3.6" height="3.6"/><path d="M9 7V4M12 7V4M15 7V4M9 20v-3M12 20v-3M15 20v-3M7 9H4M7 12H4M7 15H4M20 9h-3M20 12h-3M20 15h-3"/></svg>',
+ D6:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></svg>',
+ D7:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7" stroke-linecap="round"/></svg>',
+ D8:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5.5" cy="19" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="19" cy="6" r="2"/><path d="M7 17.4L10.6 11.6M13.9 9L17 7M3 22h18" stroke-linecap="round"/></svg>'
+};
+/* ▼ LOGO image path — YAHAN change karein (header me wordmark ke saath + footer) ▼ */
+const IITK_LOGO_SOURCES=['IITK Logo (1).png','https://www.iitk.ac.in/new/images/IIT_Kanpur_Logo.png']; /* pehle local file, phir official URL; apni file ka naam/path yahan rakhein */
+/* ▼ FOOTER ke dark background ke liye WHITE logo — YAHAN file name change karein ▼ */
+const IITK_LOGO_WHITE=['IITK Logo_White-01.png'];
+const EMAIL_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+const PHONE_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>';
+const LINK_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7L12.5 19"/></svg>';
+const PERSON='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4.2 4.2 0 1 0 0-8.4A4.2 4.2 0 0 0 12 12zm0 2.1c-4.4 0-7.6 2.3-7.6 5.1v1.2h15.2v-1.2c0-2.8-3.2-5.1-7.6-5.1z"/></svg>';
+const APP_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>';
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const byId=(a,id)=>a.find(x=>x.id===id);
+const domainOf=sid=>byId(DB.domains, byId(DB.subdomains,sid).domain);
+const colorOfSub=sid=>COLORS[byId(DB.subdomains,sid).domain];
+const subsOfDomain=d=>DB.subdomains.filter(s=>s.domain===d);
+const facultyOfSub=sid=>DB.faculty.filter(f=>f.subs.includes(sid));
+const projectsOfSub=sid=>DB.projects.filter(p=>p.sub===sid);
+const projectsOfFaculty=fid=>DB.projects.filter(p=>p.faculty.includes(fid));
+const projectsOfDomain=d=>DB.projects.filter(p=>p.dom===d);
+const facultyOfDomain=d=>DB.faculty.filter(f=>f.domain===d||f.subs.some(s=>byId(DB.subdomains,s).domain===d));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fcolor=f=>COLORS[f.domain]||'#AB4531';
+const fsoft=f=>SOFT[f.domain]||'#F6E3DE';
+/* research areas string -> array. Sheet me areas ; , | · / ya newline kisi se bhi
+   alag ho sakte hain — sirf ';' pe split karte the to multiple areas ek hi item ban
+   jaate the (sirf pehla dikhta). Ab har common separator handle hota hai. */
+const splitAreas=s=>String(s||'').split(/[;,|·\n]+/).map(x=>x.trim()).filter(Boolean);
+/* domain/sub-domain ka code (D2, SD5 …) — raw id hi code hai, bas uppercase */
+const codeOf=(kind,id)=>String(id||'').toUpperCase();
+const DEPT_FULL={EE:'Electrical Engineering',SEE:'Sustainable Energy Engineering','EE+BSBE':'EE + BSBE (Joint)'};
+const deptFull=d=>DEPT_FULL[d]||d;
+const shortName=n=>{ // "Dr. Aditya K. Jagannatham" -> "Dr. Jagannatham" for tight graph labels
+  const parts=n.replace(/^(Dr|Prof)\.?\s*/i,'').split(' ').filter(Boolean);
+  return 'Dr. '+(parts.length>2?parts[0]+' '+parts[parts.length-1]:parts.join(' '));
+};
+
+/* =========================================================
+   LANDING PAGE
+   ========================================================= */
+function renderDiscover(){
+  // hero visual collage with graceful fallback
+  $('#hero-visual').innerHTML=
+    `<div class="hv-img hv-1"><div class="hv-fallback">${ICONS.D1}</div><img src="${HERO_IMG[0]}" alt="Research at IIT Kanpur" onerror="this.remove()"></div>
+     <div class="hv-img hv-2"><div class="hv-fallback">${ICONS.D5}</div><img src="${HERO_IMG[1]}" alt="" onerror="this.remove()"></div>
+     <div class="hv-img hv-3"><div class="hv-fallback">${ICONS.D7}</div><img src="${HERO_IMG[2]}" alt="" onerror="this.remove()"></div>`;
+
+  const stats=[[DB.domains.length,'Research domains'],[DB.subdomains.length,'Sub-domains'],[DB.faculty.length,'Faculty members'],[DB.projects.length,'Sponsored projects']];
+  $('#hero-stats').innerHTML=stats.map(([n,l])=>`<div class="sstat"><b>${n}</b><span>${l}</span></div>`).join('');
+
+  $('#domain-grid').innerHTML=DB.domains.map(d=>{
+    const fac=facultyOfDomain(d.id),prj=projectsOfDomain(d.id),subs=subsOfDomain(d.id);
+    const top3=subs.slice().sort((a,b)=>projectsOfSub(b.id).length-projectsOfSub(a.id).length).slice(0,3).map(s=>s.name);
+    return `<div class="dcard" style="--dc:${COLORS[d.id]};--dc-soft:${SOFT[d.id]}" onclick="openDomain('${d.id}')">
+      <div class="dimg">
+        <div class="fallback">${ICONS[d.id]}</div>
+        <img src="${DOMAIN_IMG[d.id]}" alt="${esc(d.name)}" loading="lazy" onerror="this.remove()">
+        <span class="badge">${ICONS[d.id]}</span>
+      </div>
+      <div class="dbody">
+        <h3>${esc(d.name)} <span class="code-badge">${codeOf('dom',d.id)}</span></h3>
+        <div class="dsubs">${top3.map(esc).join(' · ')}</div>
+        <div class="dfoot">
+          <span class="nums"><b>${fac.length}</b> faculty · <b>${prj.length}</b> projects</span>
+          <span class="go">Explore <span class="arr">→</span></span>
+        </div>
+      </div></div>`;
+  }).join('');
+
+  $('#foot-domains').innerHTML=DB.domains.map(d=>`<li onclick="openDomain('${d.id}')">${esc(d.name)}</li>`).join('');
+
+  const ranked=DB.faculty.map(f=>({f,n:projectsOfFaculty(f.id).length})).sort((a,b)=>b.n-a.n).slice(0,10);
+  $('#fac-scroll').innerHTML=ranked.map(({f,n})=>{
+    const c=fcolor(f);
+    return `<div class="fcard" style="--dc:${c};--dc-soft:${fsoft(f)}" onclick='navigate({type:"faculty",id:"${f.id}"})'>
+      <div class="photo">${f.photo?`<img src="${esc(f.photo)}" alt="${esc(f.name)}" onerror="this.outerHTML='${PERSON.replace(/'/g,"\\'")}'">`:PERSON}</div>
+      <h4>${esc(f.name)}</h4>
+      <div class="meta">${esc(f.desig||'Faculty')} · ${esc(f.dept)}, IIT Kanpur</div>
+      <div class="area">${esc(splitAreas(f.areas).slice(0,3).join(' · '))}</div>
+      <span class="cnt">${n} sponsored projects</span>
+    </div>`;
+  }).join('');
+
+  const counts={};DB.projects.forEach(p=>{counts[p.fund]=(counts[p.fund]||0)+1;});
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,14);
+  if($('#fund-row'))$('#fund-row').innerHTML=top.map(([f,n])=>`<button class="fund-chip" onclick="bigSearchSet('${esc(f).replace(/'/g,"\\'")}')">${esc(f)} <b>${n}</b></button>`).join('');
+
+  const subRank=DB.subdomains.map(s=>({s,n:projectsOfSub(s.id).length})).sort((a,b)=>b.n-a.n).slice(0,6);
+  const mxS=subRank.length?subRank[0].n:1;
+  if($('#pulse-subs'))$('#pulse-subs').innerHTML=subRank.map(({s,n})=>
+    `<div class="prow" onclick='navigate({type:"subdomain",id:"${s.id}"})'>
+      <span class="nm">${esc(s.name)}</span>
+      <span class="bar"><i style="width:${Math.max(8,Math.round(n/mxS*100))}%;background:${COLORS[s.domain]}"></i></span><b>${n}</b></div>`).join('');
+  const topF=top.slice(0,6),mxF=topF.length?topF[0][1]:1;
+  if($('#pulse-funds'))$('#pulse-funds').innerHTML=topF.map(([f,n])=>
+    `<div class="prow" onclick="bigSearchSet('${esc(f).replace(/'/g,"\\'")}')">
+      <span class="nm">${esc(f)}</span>
+      <span class="bar"><i style="width:${Math.max(8,Math.round(n/mxF*100))}%;background:var(--gold)"></i></span><b>${n}</b></div>`).join('');
+}
+
+/* =========================================================
+   NAVIGATION / STATE
+   ========================================================= */
+let view=null,historyStack=[],panelOpen=true,lastView=null;
+function setTabs(mode){$('#tab-discover').classList.toggle('active',mode==='home');$('#tab-map').classList.toggle('active',mode==='map');$('#tab-dir').classList.toggle('active',mode==='dir');}
+function goDiscover(){$('#discover').classList.remove('hidden');$('#mapview').classList.remove('active');$('#facdir').classList.remove('active');setTabs('home');hideFacNav();hideFacDash();}
+function openLastMap(){if(lastView)navigate(lastView,false);else if(DB.domains[0])openDomain(DB.domains[0].id);}
+function showMap(){$('#discover').classList.add('hidden');$('#facdir').classList.remove('active');hideFacDash();$('#mapview').classList.add('active');setTabs('map');sizeDots();}
+function showFacultyDir(){
+  $('#discover').classList.add('hidden');$('#mapview').classList.remove('active');
+  $('#facdir').classList.add('active');setTabs('dir');hideFacNav();hideFacDash();
+  if(!$('#dir-grid').dataset.ready){initDir();$('#dir-grid').dataset.ready='1';}
+  renderDir();
+}
+function openDomain(id){prevPos={};navigate({type:'domain',id});}
+function openProjectGlobal(pid){const p=byId(DB.projects,pid);navigate({type:'faculty',id:p.faculty[0]},true,()=>showProjectPanel(pid));}
+function navigate(v,push=true,after){
+  if(v.type==='faculty'&&!v.dom&&!v.sub&&!v.pmode&&!v.map){return openFacultyDash(v.id);}
+  if(v.type==='subdomain'&&!v.mode)v.mode='fac';   /* default: faculty-wise (dept-wise mode-switch se available) */
+  view=v;lastView=v;showMap();
+  if(push){historyStack=historyStack.filter(h=>!(h.type===v.type&&h.id===v.id&&h.dept===v.dept&&h.dom===v.dom&&h.sub===v.sub&&h.pmode===v.pmode&&h.fromSub===v.fromSub));historyStack.push({...v});}
+  const facnav=v.type==='faculty'&&!v.pmode;
+  $('#mapview').classList.toggle('facnav',facnav);
+  drawGraph();renderBreadcrumb();renderHistory();renderLegend();renderModeSwitch();renderCenterPanel();
+  if(facnav){setupFacNav();closePanel();}    /* guided: top bar drives graph; panel project-click pe khulta hai */
+  else{$('#fac-hub').innerHTML='';if(window.innerWidth<=760)closePanel();else openPanel();}   /* mobile: map dikhe, panel tap pe khule */
+  if(after)after();
+}
+function renderModeSwitch(){
+  const box=$('#mode-switch');if(!box)return;
+  const show=view&&view.type==='subdomain';
+  box.classList.toggle('show',show);
+  if(show){
+    $('#ms-fac').classList.toggle('on',view.mode!=='dept');
+    $('#ms-dept').classList.toggle('on',view.mode==='dept');
+  }
+}
+function goBack(){const t=breadcrumbTrail();if(t.length>1)navigate(t[t.length-2].view);else goDiscover();}
+function breadcrumbTrail(){
+  const t=[];if(!view)return t;
+  if(view.type==='domain')t.push({kind:'Domain',label:byId(DB.domains,view.id).name,view});
+  if(view.type==='subdomain'){const sd=byId(DB.subdomains,view.id);
+    t.push({kind:'Domain',label:domainOf(view.id).name,view:{type:'domain',id:sd.domain}});
+    t.push({kind:'Sub-domain',label:sd.name,view});}
+  if(view.type==='subdept'){const sd=byId(DB.subdomains,view.id);
+    t.push({kind:'Domain',label:domainOf(view.id).name,view:{type:'domain',id:sd.domain}});
+    t.push({kind:'Sub-domain',label:sd.name,view:{type:'subdomain',id:sd.id,mode:'dept'}});
+    t.push({kind:'Department',label:deptFull(view.dept),view});}
+  if(view.type==='faculty'){const f=byId(DB.faculty,view.id);
+    if(view.pmode){                              /* domain flow: Domain › Sub-domain › Faculty */
+      const sid=view.fromSub;
+      if(sid){const s=byId(DB.subdomains,sid);
+        t.push({kind:'Domain',label:domainOf(sid).name,view:{type:'domain',id:s.domain}});
+        t.push({kind:'Sub-domain',label:s.name,view:{type:'subdomain',id:sid}});}
+      t.push({kind:'Faculty',label:f.name,view:{type:'faculty',id:f.id,pmode:true,fromSub:sid}});
+    }else{                                        /* directory flow: Faculty › Domain › Sub-domain */
+      t.push({kind:'Faculty',label:f.name,view:{type:'faculty',id:f.id}});
+      if(view.dom){const d=byId(DB.domains,view.dom);
+        t.push({kind:'Domain',label:d?d.name:view.dom,view:{type:'faculty',id:f.id,dom:view.dom}});}
+      if(view.sub){const s=byId(DB.subdomains,view.sub);
+        t.push({kind:'Sub-domain',label:s?s.name:view.sub,view:{type:'faculty',id:f.id,dom:view.dom,sub:view.sub}});}
+    }
+  }
+  return t;
+}
+function renderBreadcrumb(){
+  const t=breadcrumbTrail();
+  $('#breadcrumb').innerHTML=`<button class="crumb" onclick="goDiscover()">Home</button><span class="crumb-sep">›</span>`+
+    t.map((c,i)=>`<button class="crumb ${i===t.length-1?'current':''}" onclick='navigate(${JSON.stringify(c.view)})'>${c.kind?`<span class="crumb-kind">${esc(c.kind)}</span>`:''}<span class="crumb-name">${esc(c.label)}</span></button>`).join('<span class="crumb-sep">›</span>');
+}
+function renderHistory(){
+  const lvl={domain:'Domain',subdomain:'Sub-domain',subdept:'Department',faculty:'Faculty'};
+  const nm=h=>h.type==='domain'?byId(DB.domains,h.id).name
+    :h.type==='subdomain'?byId(DB.subdomains,h.id).name
+    :h.type==='subdept'?`${deptFull(h.dept)} · ${byId(DB.subdomains,h.id).name}`
+    :byId(DB.faculty,h.id).name;
+  $('#history-list').innerHTML=historyStack.slice().reverse().slice(0,10)
+    .map(h=>`<div class="hist-item" onclick='navigate(${JSON.stringify({type:h.type,id:h.id,dept:h.dept})});toggleHistory()'><span class="lvl">${lvl[h.type]}</span>${esc(nm(h))}</div>`).join('')||'<div class="hist-item">No history yet</div>';
+}
+function toggleHistory(e){if(e)e.stopPropagation();$('#history-list').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('#history-box'))$('#history-list').classList.remove('open');});
+function renderLegend(){
+  let items;
+  if(view.type==='domain')items=['Centre — Domain','Ring — Sub-domains','Click a sub-domain to go deeper'];
+  else if(view.type==='subdomain')items=view.mode==='dept'
+    ?['Centre — Sub-domain','Ring — Departments','Click a department to see its faculty']
+    :['Centre — Sub-domain','Ring — Faculty','Click a faculty member to go deeper'];
+  else if(view.type==='subdept')items=['Centre — Department','Ring — Faculty of this dept','Click a faculty member to go deeper'];
+  else if(view.pmode)items=['Centre — Faculty','Ring — Their projects','Click a project for details'];
+  else if(view.sub)items=['Centre — Sub-domain','Ring — Projects','Click a project for details'];
+  else if(view.dom)items=['Centre — Domain','Ring — Sub-domains','Click a sub-domain to see projects'];
+  else items=['Centre — Faculty','Ring — Their research domains','Click a domain to go deeper'];
+  $('#legend').innerHTML=items.map(l=>`<div class="leg-item"><span class="leg-dot"></span>${l}</div>`).join('');
+}
+function setPanelBtn(){const m=window.innerWidth<=760;$('#btn-panel').textContent=panelOpen?(m?'Close ✕':'Hide panel →'):(m?'Details ↑':'← Show panel');}
+function togglePanel(){panelOpen=!panelOpen;$('#side-panel').classList.toggle('open',panelOpen);setPanelBtn();repositionGraph();}
+function openPanel(){const was=panelOpen;panelOpen=true;$('#side-panel').classList.add('open');setPanelBtn();if(!was)repositionGraph();}
+function closePanel(){panelOpen=false;$('#side-panel').classList.remove('open');setPanelBtn();}
+function repositionGraph(){
+  try{
+    if(!gRoot||!$('#mapview').classList.contains('active'))return;
+    const ob=baseX;baseX=-panelOffset()/2;
+    gRoot.setAttribute('transform',`translate(${baseX},${baseY}) scale(${zoom.k})`);
+    gRoot.animate([{transform:`translate(${ob}px,${baseY}px) scale(${zoom.k})`},
+                   {transform:`translate(${baseX}px,${baseY}px) scale(${zoom.k})`}],
+      {duration:380,easing:'cubic-bezier(.4,0,.2,1)'});
+  }catch(e){}
+}
+
+/* =========================================================
+   GRAPH MODEL
+   ========================================================= */
+function buildGraphData(){
+  if(view.type==='domain'){
+    const d=byId(DB.domains,view.id),c=COLORS[d.id];
+    const ring=subsOfDomain(d.id).map(s=>({id:s.id,kind:'subdomain',label:s.name,color:c,
+      count:`${codeOf('sub',s.id)} · ${facultyOfSub(s.id).length} faculty · ${projectsOfSub(s.id).length} projects`}));
+    return {center:{label:d.name,sub:`Research domain · ${codeOf('dom',d.id)}`,color:c},ring};
+  }
+  if(view.type==='subdomain'){
+    const s=byId(DB.subdomains,view.id),c=colorOfSub(s.id);
+    if(view.mode==='dept'){
+      const fac=facultyOfSub(s.id),prj=projectsOfSub(s.id);
+      const depts=[...new Set(facultyOfDomain(s.domain).map(f=>f.dept))].sort();
+      const ring=depts.map(dp=>{
+        const nf=fac.filter(f=>f.dept===dp).length,np=prj.filter(p=>p.dept===dp).length;
+        return {id:dp,kind:'dept',label:deptFull(dp),color:c,dim:nf===0,
+          count:nf?`${nf} faculty · ${np} projects`:'No faculty in this area'};
+      });
+      return {center:{label:s.name,sub:`${domainOf(s.id).name} · ${codeOf("sub",s.id)}`,color:c},ring};
+    }
+    const ring=facultyOfSub(s.id).map(f=>({id:f.id,kind:'faculty',label:f.name,color:c,
+      count:projectsOfFaculty(f.id).length+' projects',ava:true}));
+    return {center:{label:s.name,sub:`${domainOf(s.id).name} · ${codeOf("sub",s.id)}`,color:c},ring};
+  }
+  if(view.type==='subdept'){
+    const s=byId(DB.subdomains,view.id),c=colorOfSub(s.id);
+    const ring=facultyOfSub(s.id).filter(f=>f.dept===view.dept).map(f=>({id:f.id,kind:'faculty',label:f.name,color:c,
+      count:projectsOfFaculty(f.id).filter(p=>p.dept===view.dept).length+' projects',ava:true}));
+    return {center:{label:deptFull(view.dept),sub:s.name,color:c,dept:true},ring};
+  }
+  /* ===== FACULTY: 3-level scoped drill =====
+     level 1 (no dom)        -> centre = faculty,    ring = uske research DOMAINS
+     level 2 (dom)           -> centre = domain,     ring = us faculty ke us domain ke SUB-DOMAINS
+     level 3 (dom + sub)     -> centre = sub-domain, ring = us faculty ke us sub-domain ke PROJECTS */
+  const f=byId(DB.faculty,view.id);const c=fcolor(f);
+  const prj=projectsOfFaculty(f.id);
+
+  if(view.pmode){                                /* DOMAIN-entry flow: faculty -> projects directly */
+    const sub=view.fromSub;
+    let list=sub?prj.filter(p=>p.sub===sub):prj;
+    if(sub&&!list.length)list=prj;               /* us sub me project na ho to saare dikhao */
+    const ring=list.map(p=>({id:p.id,kind:'project',label:p.name,status:p.status,pcolor:statusColor(p),
+      color:p.sub?colorOfSub(p.sub):c,count:p.fund.split(' ').slice(0,4).join(' ')}));
+    const areas=splitAreas(f.areas).slice(0,3);
+    return {center:{label:f.name,sub:(f.desig?f.desig+' · ':'')+f.dept+', IIT Kanpur',color:c,ava:true,areas},ring};
+  }
+
+  if(view.sub){                                  /* level 3 — projects */
+    const s=byId(DB.subdomains,view.sub),sc=colorOfSub(view.sub);
+    const list=prj.filter(p=>p.sub===view.sub);
+    const ring=list.map(p=>({id:p.id,kind:'project',label:p.name,status:p.status,pcolor:statusColor(p),
+      color:sc,count:p.fund.split(' ').slice(0,4).join(' ')}));
+    return {center:{label:s.name,sub:`${f.name} · ${codeOf('sub',s.id)}`,color:sc},ring};
+  }
+  if(view.dom){                                  /* level 2 — sub-domains in this domain */
+    const d=byId(DB.domains,view.dom),dc=COLORS[view.dom];
+    const subIds=new Set();
+    prj.forEach(p=>{if(p.dom===view.dom&&p.sub)subIds.add(p.sub);});
+    f.subs.forEach(sid=>{const s=byId(DB.subdomains,sid);if(s&&s.domain===view.dom)subIds.add(sid);});
+    const ring=[...subIds].map(sid=>{const s=byId(DB.subdomains,sid);if(!s)return null;
+      const np=prj.filter(p=>p.sub===sid).length;
+      return {id:sid,kind:'fsub',label:s.name,color:dc,count:`${codeOf('sub',sid)} · ${np} projects`};}).filter(Boolean);
+    return {center:{label:d.name,sub:`${f.name} · ${codeOf('dom',d.id)}`,color:dc},ring};
+  }
+  /* level 1 — domains the faculty works in */
+  const domIds=new Set();
+  prj.forEach(p=>{if(p.dom)domIds.add(p.dom);});
+  f.subs.forEach(sid=>{const s=byId(DB.subdomains,sid);if(s)domIds.add(s.domain);});
+  if(f.domain)domIds.add(f.domain);
+  const ring=[...domIds].map(did=>{const d=byId(DB.domains,did);if(!d)return null;
+    const np=prj.filter(p=>p.dom===did).length;
+    const ns=new Set(prj.filter(p=>p.dom===did&&p.sub).map(p=>p.sub)).size;
+    return {id:did,kind:'fdomain',label:d.name,color:COLORS[did],
+      count:`${codeOf('dom',did)} · ${ns} sub-domains · ${np} projects`};}).filter(Boolean);
+  const areas=splitAreas(f.areas).slice(0,3);
+  return {center:{label:f.name,sub:(f.desig?f.desig+' · ':'')+f.dept+', IIT Kanpur',color:c,ava:true,areas},ring};
+}
+
+/* =========================================================
+   GRAPH RENDERING — WEF-style with animated recentring
+   ========================================================= */
+const svg=$('#graph-svg'),SVGNS='http://www.w3.org/2000/svg';
+let gRoot,zoom={k:1},prevPos={},drawToken=0,baseX=0,baseY=0,fitK=1;
+function panelOffset(){return (panelOpen&&window.innerWidth>760)?Math.min(520,window.innerWidth*0.94):0;}
+const REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ZMIN=0.55,ZMAX=2.2;   /* zoom limits — bahut zyada in/out se rokein */
+function el(t,a,p){const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+function polar(r,a){return [r*Math.cos(a),r*Math.sin(a)];}
+function personGlyph(parent,r,color){
+  el('circle',{cy:-r*0.30,r:r*0.30,fill:color,'fill-opacity':.85},parent);
+  el('path',{d:`M ${-r*0.52} ${r*0.62} a ${r*0.52} ${r*0.5} 0 0 1 ${r*1.04} 0 z`,fill:color,'fill-opacity':.85},parent);
+}
+function glide(g,key,tx,ty,newPos,extraScale){
+  newPos[key]={x:tx,y:ty};
+  g.setAttribute('transform',`translate(${tx},${ty})`+(extraScale?` scale(1)`:''));
+  if(REDUCED||!g.animate)return;
+  const from=prevPos[key];
+  try{
+    if(from&&(Math.abs(from.x-tx)>1||Math.abs(from.y-ty)>1)){
+      g.animate([{transform:`translate(${from.x}px,${from.y}px) scale(${extraScale?0.55:1})`},
+                 {transform:`translate(${tx}px,${ty}px) scale(1)`}],
+        {duration:680,easing:'cubic-bezier(.45,.05,.2,1)'});
+    }else if(!from){
+      g.animate([{transform:`translate(${tx}px,${ty}px) scale(.25)`,opacity:0},
+                 {transform:`translate(${tx}px,${ty}px) scale(1)`,opacity:1}],
+        {duration:500,delay:140,easing:'ease-out',fill:'backwards'});
+    }else if(extraScale){
+      g.animate([{transform:`translate(${tx}px,${ty}px) scale(.55)`},
+                 {transform:`translate(${tx}px,${ty}px) scale(1)`}],
+        {duration:680,easing:'cubic-bezier(.45,.05,.2,1)'});
+    }
+  }catch(err){}
+}
+
+function makeLines(str,perLine,maxLines){
+  const words=String(str).split(/\s+/).filter(Boolean);
+  const lines=[''];
+  for(const w of words){
+    const li=lines.length-1;
+    if(!lines[li]||((lines[li]+' '+w).length<=perLine))lines[li]=(lines[li]+' '+w).trim();
+    else lines.push(w);
+  }
+  if(lines.length>maxLines){
+    const kept=lines.slice(0,maxLines);
+    kept[maxLines-1]=kept[maxLines-1].slice(0,Math.max(perLine-1,4)).replace(/[ ,;:.-]+$/,'')+'…';
+    return kept;
+  }
+  return lines;
+}
+
+function drawGraph(){
+  const myDraw=++drawToken;
+  svg.innerHTML='';
+  const W=svg.clientWidth||window.innerWidth,H=svg.clientHeight||(window.innerHeight-56);
+  svg.setAttribute('viewBox',`${-W/2} ${-H/2} ${W} ${H}`);
+  const PW=panelOffset();
+  baseX=-PW/2;
+  baseY=(view&&view.type==='faculty'&&!view.pmode)?((svg.clientWidth||window.innerWidth)<640?92:66):0;   /* top nav bar ke neeche graph shift */
+  gRoot=el('g',{transform:`translate(${baseX},${baseY})`},svg);
+  const data=buildGraphData();
+  const n=data.ring.length||1;
+
+  const isMobile=W<640;
+  const A=Math.max(W-PW-24,300);
+  const availW=(W-PW)/2-14, availH=H/2-14;     /* usable half-box (panel chhod ke) */
+  const small=Math.min(A,H-(isMobile?100:60));
+  const horiz=n<=6&&!isMobile;                  /* sirf bahut kam nodes par horizontal; warna radial = no collision */
+  /* labels ring se kitna bahar nikalti hain (per side). desktop radial pehle 175 reserve karta tha
+     -> graph chhota/zoomed-out lagta tha; ab realistic 120 */
+  const labelReach=horiz?160:(isMobile?64:120);
+  const CR=Math.max(54,Math.min(small*(isMobile?0.17:0.15),118));
+
+  /* density classes — jitne zyada nodes, utne chhote/short labels */
+  const dense=n>18, mid=n>10;
+
+  /* TARGET ring radius: available box ko (labels chhod ke) poora bhar do —
+     har view me consistent comfortable size, na bahut zoom-in na zoom-out */
+  const fitBox=Math.min(availW,availH);
+  let R=Math.max(CR+96,fitBox-labelReach);
+  /* COLLISION GUARD: har node ke beech minimum arc-length guarantee karo,
+     warna dense ring me radial labels ek-doosre par chadh jaate hain */
+  if(!horiz){
+    const minArc=isMobile?42:(dense?60:68);     /* px arc length per node on the ring */
+    const rNeeded=(n*minArc)/(2*Math.PI);
+    if(rNeeded>R)R=rNeeded;                      /* ring bada -> labels ke beech zyada gap */
+  }
+  const newPos={};
+
+  const defs=el('defs',{},gRoot);
+  const grad=el('radialGradient',{id:'cgrad'},defs);
+  el('stop',{offset:'0%','stop-color':data.center.color,'stop-opacity':'0.12'},grad);
+  el('stop',{offset:'100%','stop-color':data.center.color,'stop-opacity':'0.02'},grad);
+  el('circle',{r:R,class:'ring-outer'},gRoot);
+
+  data.ring.forEach((d,i)=>{d.a=-Math.PI/2+i*2*Math.PI/n;[d.x,d.y]=polar(R,d.a);});
+
+  const linkLayer=el('g',{},gRoot),nodeLayer=el('g',{},gRoot);
+  data.ring.forEach(d=>{
+    const [sx,sy]=polar(CR+12,d.a);
+    const mx=(sx+d.x)/2*1.06,my=(sy+d.y)/2*1.06;
+    el('path',{d:`M${sx},${sy} Q${mx},${my} ${d.x},${d.y}`,class:'glink','data-link':d.id},linkLayer);
+  });
+  if(!REDUCED&&linkLayer.animate){
+    try{linkLayer.animate([{opacity:0},{opacity:1}],{duration:380,delay:380,easing:'ease',fill:'backwards'});}catch(e){}}
+
+  const centerKey=view.type==='subdept'?('dept:'+view.dept):(view.type+':'+view.id);
+  const gC=el('g',{class:'gnode'},nodeLayer);
+  el('circle',{r:CR*1.32,fill:'url(#cgrad)'},gC);
+  el('circle',{r:CR,fill:'#fff',stroke:data.center.color,'stroke-width':2},gC);
+  el('circle',{r:CR+11,fill:'none',stroke:data.center.color,'stroke-width':1.6,'stroke-opacity':.85},gC);
+  let fs=Math.max(12,CR*0.145);
+  let lines=makeLines(data.center.label,Math.max(10,Math.floor((CR*1.7)/(fs*0.56))),3);
+  if(lines.length===3){fs*=0.88;lines=makeLines(data.center.label,Math.max(10,Math.floor((CR*1.7)/(fs*0.56))),3);}
+  const hasSub=CR>66;
+  const glyphOff=data.center.ava?CR*0.34:0;
+  if(data.center.ava){
+    const gp=el('g',{transform:`translate(0,${-CR*0.46}) scale(${CR*0.020})`},gC);
+    personGlyph(gp,16,data.center.color);
+  }
+  const lh=fs*1.18;
+  const y0=glyphOff-(lines.length-1)*lh/2-(hasSub?fs*0.30:0);
+  lines.forEach((l,i)=>{const tx=el('text',{y:y0+i*lh,class:'center-name','font-size':fs},gC);tx.textContent=l;});
+  if(hasSub){
+    const subFs=Math.max(10.5,Math.min(CR*0.10,14));            /* readable but circle ke andar */
+    const subPer=Math.max(12,Math.floor((CR*1.7)/(subFs*0.55))); /* width-based char budget */
+    const subLines=makeLines(data.center.sub,subPer,2);          /* zaroorat ho to 2 line, overflow nahi */
+    const subLh=subFs+2.5;
+    const subY=y0+lines.length*lh+subFs*0.55+3;
+    const subT=el('text',{class:'glabel-sub','text-anchor':'middle','font-size':subFs,'font-weight':600},gC);
+    subLines.forEach((ln,i)=>{const ts=el('tspan',{x:0,y:subY+i*subLh},subT);ts.textContent=ln;});
+    if(!data.center.ava){                                        /* image center -> naam ke peeche dark band, taaki saaf dikhe */
+      try{
+        const bb=subT.getBBox(),px=11,py=4.5;
+        const bg=el('rect',{x:bb.x-px,y:bb.y-py,width:bb.width+px*2,height:bb.height+py*2,rx:9,
+          fill:'rgba(171,69,49,.85)',stroke:'rgba(255,255,255,.25)','stroke-width':1});
+        gC.insertBefore(bg,subT);
+        subT.setAttribute('data-band','1');                     /* band hai -> halo ki zaroorat nahi */
+        subT.style.setProperty('stroke','none','important');
+      }catch(e){}
+    }
+  }
+  if(data.center.areas&&data.center.areas.length&&!isMobile){
+    const at=el('text',{y:CR+30,'text-anchor':'middle','font-size':10.5,'font-weight':700,fill:'var(--grey-olive)',style:'letter-spacing:.08em;text-transform:uppercase'},gC);
+    at.textContent='Research areas';
+    data.center.areas.slice(0,2).forEach((a,i)=>{
+      const al=el('text',{y:CR+45+i*14,'text-anchor':'middle','font-size':11,'font-weight':500,fill:'#5d4a42'},gC);
+      al.textContent=a.length>40?a.slice(0,38)+'…':a;
+    });
+  }
+  gC.addEventListener('click',()=>{openPanel();renderCenterPanel();});
+  glide(gC,centerKey,0,0,newPos,true);
+
+  const domId=view.type==='domain'?view.id
+    :(view.type==='subdomain'||view.type==='subdept')?byId(DB.subdomains,view.id).domain
+    :view.type==='faculty'?(view.sub?byId(DB.subdomains,view.sub).domain:(view.dom||byId(DB.faculty,view.id).domain))
+    :byId(DB.faculty,view.id).domain;
+  if(!data.center.ava&&DOMAIN_IMG[domId]){
+    const pre=new Image();
+    pre.onload=()=>{
+      if(myDraw!==drawToken)return;
+      const clip=el('clipPath',{id:'cclip'},defs);
+      el('circle',{r:CR-2},clip);
+      const firstText=gC.querySelector('text');
+      const im=el('image',{href:DOMAIN_IMG[domId],x:-CR,y:-CR,width:CR*2,height:CR*2,
+        preserveAspectRatio:'xMidYMid slice','clip-path':'url(#cclip)'});
+      const ov=el('circle',{r:CR-2,fill:'rgba(40,17,12,.66)'});
+      gC.insertBefore(ov,firstText);gC.insertBefore(im,ov);
+      gC.querySelectorAll('text').forEach(tx=>{
+        tx.style.setProperty('fill','#fff','important');
+        if(tx.getAttribute('data-band')){                       /* band ke peeche text -> koi halo nahi */
+          tx.style.setProperty('stroke','none','important');return;
+        }
+        /* photo ke upar DARK halo -> white text crisp, fuzzy nahi */
+        tx.style.setProperty('stroke','rgba(20,8,5,.92)','important');
+        tx.style.setProperty('paint-order','stroke');
+        tx.style.setProperty('stroke-width','2.6px','important');
+        tx.style.setProperty('stroke-linejoin','round','important');
+      });
+    };
+    pre.src=DOMAIN_IMG[domId];
+  }
+
+  const maxL=n<=8?3:2;
+  data.ring.forEach(d=>{
+    const g=el('g',{class:'gnode'},nodeLayer);
+    if(d.dim)g.setAttribute('opacity',0.45);
+    el('circle',{r:30,fill:'rgba(255,255,255,.01)'},g);
+    const nr=d.kind==='project'?(isMobile?10:13):(isMobile?13:16);
+    el('circle',{r:nr,class:'core',fill:'#fff',stroke:d.color,'stroke-width':2},g);
+    if(d.kind==='faculty'){const gp=el('g',{transform:`scale(${isMobile?0.5:0.58})`},g);personGlyph(gp,16,d.color);}
+    else el('circle',{r:d.kind==='project'?(isMobile?4:5):(isMobile?4:5),fill:d.pcolor||d.color,'fill-opacity':1},g);
+
+    if(horiz){
+      const side=Math.cos(d.a)>=0?1:-1;
+      const l1=makeLines(d.label,19,maxL);
+      const showCnt=!!d.count;
+      const lh1=16.5;
+      const gap=side*(nr+15);                       /* node se zyada breathing room */
+      const yT=-(l1.length-1)*lh1/2-(showCnt?10:0)+4;
+      const tt=el('text',{class:'r1-label','text-anchor':side>0?'start':'end',y:yT,'font-size':13.5},g);
+      l1.forEach((ln,i)=>{const ts=el('tspan',{x:gap,dy:i?lh1:0},tt);ts.textContent=ln;});
+      if(showCnt){
+        const c2=el('text',{class:'r1-count','text-anchor':side>0?'start':'end',x:gap,y:yT+(l1.length-1)*lh1+19},g);
+        c2.textContent=d.count.length>34?d.count.slice(0,32)+'…':d.count;
+      }
+    }else{
+      /* UPRIGHT horizontal labels — same reading style as the sub-domain page (no rotation) */
+      const side=Math.cos(d.a)>=0?1:-1;            /* right half -> text goes right; left half -> left */
+      const gap=2*Math.PI*R/n;                     /* adjacent labels ke beech arc spacing */
+      const fsz=isMobile?10:(gap<26?10:gap<40?11:12);            /* dense ring -> thoda chhota font */
+      const rLines=isMobile?2:(gap<46?1:2);                      /* tight spacing -> single line (vertical overlap kam) */
+      const cpl=isMobile?13:Math.round((rLines===1?26:18)*(12/fsz));  /* font ke hisaab se chars/line */
+      const lh2=fsz+2.5;
+      const l2=makeLines(d.label,cpl,rLines);
+      const xo=side*(nr+(isMobile?8:12));
+      const tt=el('text',{class:'r1-label','font-size':fsz,'text-anchor':side>0?'start':'end',y:fsz*0.34-(l2.length-1)*lh2/2},g);
+      l2.forEach((ln,i)=>{const ts=el('tspan',{x:xo,dy:i?lh2:0},tt);ts.textContent=ln;});
+    }
+    attachNode(g,d);
+    glide(g,d.kind+':'+(d.real||d.id),d.x,d.y,newPos);
+  });
+
+  /* AUTO-FIT: ring + labels ko available box me consistently fit karo
+     (har view roughly same fill -> zoom level stable, na zyada in na out) */
+  const needR=R+labelReach+14;
+  fitK=Math.min(1,availH/needR,availW/needR);
+  if(fitK<ZMIN)fitK=ZMIN;
+  zoom.k=fitK;
+  gRoot.setAttribute('transform',`translate(${baseX},${baseY}) scale(${zoom.k})`);
+  updateZoomLabel();
+
+  prevPos=newPos;
+}
+function attachNode(g,d){
+  g.addEventListener('mouseenter',e=>{highlight(d.id,d.parent);showTooltip(e,d);});
+  g.addEventListener('mousemove',moveTooltip);
+  g.addEventListener('mouseleave',()=>{clearHighlight();hideTooltip();});
+  g.addEventListener('click',e=>{
+    e.stopPropagation();hideTooltip();
+    if(d.kind==='subdomain')navigate({type:'subdomain',id:d.id});
+    else if(d.kind==='dept')navigate({type:'subdept',id:view.id,dept:d.id});
+    else if(d.kind==='faculty'){
+      if(view.type==='subdomain'||view.type==='subdept')   /* domain flow: faculty -> uske projects */
+        navigate({type:'faculty',id:d.real||d.id,pmode:true,fromSub:view.id});
+      else navigate({type:'faculty',id:d.real||d.id});      /* directory se: full drill */
+    }
+    else if(d.kind==='fdomain')navigate({type:'faculty',id:view.id,dom:d.id});
+    else if(d.kind==='fsub')navigate({type:'faculty',id:view.id,dom:view.dom,sub:d.id});
+    else if(d.kind==='project'){openPanel();showProjectPanel(d.id);pulse(g);}
+  });
+}
+function pulse(g){const c=g.querySelector('.core');if(!c)return;c.setAttribute('stroke-width',3);setTimeout(()=>c.setAttribute('stroke-width',1.4),600);}
+function highlight(id,parent){
+  svg.querySelectorAll('.glink').forEach(l=>{
+    const hit=l.getAttribute('data-link')===id||l.getAttribute('data-parent')===id||l.getAttribute('data-link')===parent;
+    l.classList.toggle('lit',hit);l.classList.toggle('dim',!hit);
+  });
+}
+function clearHighlight(){svg.querySelectorAll('.glink').forEach(l=>l.classList.remove('lit','dim'));}
+
+/* =========================================================
+   FACULTY GUIDED NAV — top bar: Domain tabs -> Sub-domain chips.
+   Graph existing drill (domains ring -> subs ring -> projects ring)
+   ko drive karta hai; har node/tab/chip click state update karta hai.
+   ========================================================= */
+const STC={active:'#1F9E57',ongoing:'#D08A2E',done:'#8A8079'};
+function statusKey(p){const s=String(p&&p.status||'').toLowerCase();
+  if(/complete|closed|finish/.test(s))return 'done';
+  if(/ongoing|continu|progress/.test(s))return 'ongoing';
+  if(/active|running|sanction|current|open/.test(s))return 'active';
+  return s?'ongoing':'done';}
+function statusColor(p){return STC[statusKey(p)]||'#798478';}
+function isFacNav(){return view&&view.type==='faculty'&&!view.pmode;}
+/* faculty ke domains (project count ke saath, desc) — buildGraphData level-1 jaisa */
+function facDomains(fid){
+  const f=byId(DB.faculty,fid),prj=projectsOfFaculty(fid),ids=new Set();
+  prj.forEach(p=>{if(p.dom)ids.add(p.dom);});
+  (f.subs||[]).forEach(sid=>{const s=byId(DB.subdomains,sid);if(s)ids.add(s.domain);});
+  if(f.domain)ids.add(f.domain);
+  return [...ids].map(id=>({id,dom:byId(DB.domains,id),n:prj.filter(p=>p.dom===id).length})).filter(x=>x.dom)
+    .sort((a,b)=>b.n-a.n);
+}
+/* ek domain ke andar faculty ke sub-domains */
+function facSubs(fid,dom){
+  const f=byId(DB.faculty,fid),prj=projectsOfFaculty(fid),ids=new Set();
+  prj.forEach(p=>{if(p.dom===dom&&p.sub)ids.add(p.sub);});
+  (f.subs||[]).forEach(sid=>{const s=byId(DB.subdomains,sid);if(s&&s.domain===dom)ids.add(sid);});
+  return [...ids].map(id=>({s:byId(DB.subdomains,id),n:prj.filter(p=>p.sub===id).length})).filter(x=>x.s);
+}
+function setupFacNav(){
+  const f=byId(DB.faculty,view.id);if(!f){$('#fac-hub').innerHTML='';return;}
+  const prj=projectsOfFaculty(view.id),doms=facDomains(view.id);
+  let caption,subsRow='';
+  if(!view.dom){
+    caption='<b>Step 1.</b> Pick a research domain';
+  }else{
+    const dn=byId(DB.domains,view.dom),subs=facSubs(view.id,view.dom);
+    subsRow=`<div class="fnav-row subs"><span class="fnav-lbl">Sub-domains</span>${
+      subs.map(x=>`<button class="schip ${view.sub===x.s.id?'on':''}" onclick='navigate({type:"faculty",id:"${view.id}",dom:"${view.dom}",sub:"${x.s.id}"})'>${esc(x.s.name)} <b>${x.n}</b></button>`).join('')
+      ||'<span class="fnav-hint">No mapped sub-domains in this domain</span>'}</div>`;
+    caption=view.sub
+      ?`<b>Step 3.</b> Projects in ${esc(byId(DB.subdomains,view.sub).name)} — click one for full details`
+      :`<b>Step 2.</b> Sub-domains of ${esc(dn?dn.name:'')} — pick one`;
+  }
+  $('#fac-hub').innerHTML=`
+   <div class="fnav">
+     <div class="fnav-top">
+       <span class="fnav-id"><span class="av">${f.photo?`<img src="${esc(f.photo)}" onerror="this.remove()">`:PERSON}</span>
+         <span class="who"><b>${esc(f.name)}</b><span>${esc(f.desig||'Faculty')} · ${esc(f.dept)}, IIT Kanpur</span></span></span>
+       <span class="fnav-cap">${caption}</span>
+       <span class="fnav-legend">
+         <span class="li"><i style="background:${STC.active}"></i>Active</span>
+         <span class="li"><i style="background:${STC.ongoing}"></i>Ongoing</span>
+         <span class="li"><i style="background:${STC.done}"></i>Completed</span></span>
+     </div>
+     <div class="fnav-row">
+       <span class="fnav-lbl">Domains</span>
+       <button class="dtab ${!view.dom?'on':''}" onclick='navigate({type:"faculty",id:"${view.id}"})'>All domains <b>${prj.length}</b></button>
+       ${doms.map(d=>`<button class="dtab ${view.dom===d.id?'on':''}" style="--dc:${COLORS[d.id]||'#8A5A33'}" onclick='navigate({type:"faculty",id:"${view.id}",dom:"${d.id}"})'><i class="dt-dot"></i>${esc(d.dom.name)} <b>${d.n}</b></button>`).join('')}
+     </div>
+     ${subsRow}
+   </div>`;
+}
+function hideFacNav(){const h=$('#fac-hub');if(h)h.innerHTML='';$('#mapview').classList.remove('facnav');}
+
+/* =========================================================
+   FACULTY 360° DASHBOARD — live-data profile with cross-filters
+   ========================================================= */
+const dash={fid:null,status:'all',dom:'',fund:'',q:''};
+const statusName={active:'Active',ongoing:'Ongoing',done:'Completed'};
+const DASHIC={
+  domains:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>',
+  subs:'<svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="1.8"/><circle cx="18" cy="12" r="1.8"/><circle cx="18" cy="19" r="1.8"/><path d="M6 7v3a4 4 0 0 0 4 4h6M10 14v3a2 2 0 0 0 2 2h4"/></svg>',
+  projects:'<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  active:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>',
+  ongoing:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v4.5l3 1.8"/></svg>',
+  done:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.4 12.4l2.6 2.6 4.6-5.2"/></svg>',
+  funders:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 8h5M9.5 11h5M13.5 8c1 2.5-.6 3.6-3 3.6l3.5 4.4"/></svg>',
+  collab:'<svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.2a3 3 0 0 1 0 5.6M17 19a5.5 5.5 0 0 0-1.4-3.6"/></svg>',
+  pubs:'<svg viewBox="0 0 24 24"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M7 4v14"/></svg>'};
+function dashKpi(a){
+  if(a.indexOf('st:')===0){const k=a.slice(3);dash.status=(dash.status===k)?'all':k;renderDashProjects();dashScroll('dash-projects');}
+  else if(a==='projects'){dashClear();dashScroll('dash-projects');}
+  else dashScroll('dash-'+a);
+}
+function dashScroll(id){const e=document.getElementById(id);if(!e)return;
+  e.scrollIntoView({behavior:'smooth',block:'start'});
+  e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash');}
+function showFacDash(){
+  $('#discover').classList.add('hidden');$('#mapview').classList.remove('active');$('#mapview').classList.remove('facnav');
+  $('#facdir').classList.remove('active');$('#facdash').classList.add('active');setTabs('dir');
+}
+function hideFacDash(){$('#facdash').classList.remove('active');}
+function dashDonut(segs){
+  const total=segs.reduce((s,x)=>s+x.value,0)||1,R=52,C=2*Math.PI*R;let off=0;
+  const arcs=segs.filter(s=>s.value>0).map(s=>{const dash=s.value/total*C;
+    const c=`<circle cx="70" cy="70" r="${R}" fill="none" stroke="${s.color}" stroke-width="17" stroke-dasharray="${dash} ${C-dash}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"/>`;off+=dash;return c;}).join('');
+  return `<svg viewBox="0 0 140 140" class="db-donut">${arcs||`<circle cx="70" cy="70" r="${R}" fill="none" stroke="#eee" stroke-width="17"/>`}
+    <text x="70" y="66" text-anchor="middle" class="dd-num">${total}</text><text x="70" y="83" text-anchor="middle" class="dd-lbl">Projects</text></svg>`;
+}
+function openFacultyDash(fid){
+  const f=byId(DB.faculty,fid);if(!f)return;
+  dash.fid=fid;dash.status='all';dash.dom='';dash.fund='';dash.q='';
+  showFacDash();
+  const prj=projectsOfFaculty(fid),areas=splitAreas(f.areas);
+  const doms=facDomains(fid);
+  const st={active:0,ongoing:0,done:0};prj.forEach(p=>st[statusKey(p)]++);
+  const subs=new Set();prj.forEach(p=>{if(p.sub)subs.add(p.sub);});(f.subs||[]).forEach(s=>subs.add(s));
+  const fundCount={};prj.forEach(p=>{if(p.fund)fundCount[p.fund]=(fundCount[p.fund]||0)+1;});
+  const funders=Object.entries(fundCount).sort((a,b)=>b[1]-a[1]);
+  const collab=new Map();(f.subs||[]).forEach(sid=>facultyOfSub(sid).forEach(g=>{if(g.id!==fid)collab.set(g.id,(collab.get(g.id)||0)+1);}));
+  const collabArr=[...collab.entries()].sort((a,b)=>b[1]-a[1]);
+
+  const kpis=[['Domains',doms.length,'','domains','domchart'],['Sub-domains',subs.size,'','subs','domchart'],
+    ['Projects',prj.length,'','projects','projects'],['Active',st.active,'act','active','st:active'],
+    ['Ongoing',st.ongoing,'ong','ongoing','st:ongoing'],['Completed',st.done,'don','done','st:done'],
+    ['Funders',funders.length,'gold','funders','funding'],['Collaborators',collabArr.length,'','collab','collab']]
+    .filter(k=>k[0]!=='Ongoing'||k[1]>0);
+  const num=v=>{const n=parseInt(String(v).replace(/[^\d]/g,''),10);return isNaN(n)?null:n;};
+  const opt=[['pubs','Publications'],['patents','Patents'],['students','Students / Scholars']]
+    .filter(([k])=>f[k]&&String(f[k]).trim());
+
+  const domBars=doms.map(d=>`<div class="db-bar" data-dom="${d.id}" onclick="dashSetDom('${d.id}')">
+     <span class="db-bl">${esc(d.dom.name)}</span>
+     <span class="db-track"><i style="width:${Math.max(5,d.n/Math.max(1,doms[0].n)*100)}%;background:${COLORS[d.id]||'#8A5A33'}"></i></span><b>${d.n}</b></div>`).join('')||'<div class="pj-empty">No domains mapped.</div>';
+
+  const donutSegs=[{label:'Active',value:st.active,color:'#1F9E57',key:'active'},
+    {label:'Ongoing',value:st.ongoing,color:'#D08A2E',key:'ongoing'},
+    {label:'Completed',value:st.done,color:'#8A8079',key:'done'}].filter(s=>s.value>0||s.key!=='ongoing');
+  const donutLeg=donutSegs.map(s=>`<div class="li" onclick="dashSetStatus('${s.key}')" style="cursor:pointer"><i style="background:${s.color}"></i>${s.label}<b>${s.value}</b></div>`).join('');
+
+  const fundList=funders.length?funders.map(([fn,n])=>`<div class="fund-item ${dash.fund===fn?'on':''}" data-fund="${esc(fn)}" onclick="dashSetFund('${esc(fn).replace(/'/g,"\\'")}')">
+     <span class="nm">${esc(fn)}</span><span class="bar"><i style="width:${Math.max(8,n/funders[0][1]*100)}%"></i></span><b>${n}</b></div>`).join(''):'<div class="pj-empty">No funding agencies mapped.</div>';
+
+  const collabCards=collabArr.length?collabArr.slice(0,12).map(([cid,sh])=>{const g=byId(DB.faculty,cid);if(!g)return'';
+    return `<div class="collab" onclick="openFacultyDash('${g.id}')"><span class="av">${g.photo?`<img src="${esc(g.photo)}" onerror="this.remove()">`:PERSON}</span>
+      <span class="nm"><b>${esc(g.name)}</b><span>${esc(g.dept)} · ${sh} shared sub-domain${sh>1?'s':''}</span></span></div>`;}).join('')
+    :'<div class="pj-empty">No shared-area collaborators found. <span style="font-size:11px">(Co-PI links need a column in the sheet.)</span></div>';
+
+  $('#facdash-body').innerHTML=`
+   <div class="fd-hero">
+     <button class="fd-back" onclick="goBackFromDash()">← Back</button>
+     <div class="fd-hero-in">
+       <span class="fd-photo">${f.photo?`<img src="${esc(f.photo)}" onerror="this.remove()">`:PERSON}</span>
+       <div class="fd-hid">
+         <div class="fd-kind">Faculty 360° · Research Intelligence</div>
+         <h1>${esc(f.name)}</h1>
+         <div class="meta">${esc(f.desig||'Faculty')} · ${esc(f.dept)}, IIT Kanpur</div>
+         <div class="fd-actions">
+           ${f.email?`<a class="fd-act" href="mailto:${esc(f.email)}"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</a>`:''}
+           ${f.phone?`<a class="fd-act" href="tel:${esc(f.phone)}"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Call</a>`:''}
+           ${f.home?`<a class="fd-act" href="${esc(f.home)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7L12.5 19"/></svg>Profile</a>`:''}
+           ${f.scholar?`<a class="fd-act" href="${/^https?:/.test(f.scholar)?esc(f.scholar):'#'}" ${/^https?:/.test(f.scholar)?'target="_blank" rel="noopener"':''}><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M5 11v5l7 4 7-4v-5"/></svg>Scholar</a>`:''}
+           <button class="fd-act gold" onclick="navigate({type:'faculty',id:'${fid}',map:true})"><svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2"/><circle cx="18" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M7.5 8.5l3.5 7M16.5 8.5l-3.5 7"/></svg>Knowledge map</button>
+         </div>
+       </div>
+     </div>
+     ${areas.length?`<div class="fd-tags">${areas.slice(0,14).map(a=>`<span class="fd-tag">${esc(a)}</span>`).join('')}</div>`:''}
+   </div>
+
+   <div class="fd-kpis">
+     ${kpis.map(([l,v,c,ic,a])=>`<button class="kpi ${c}" data-kact="${a}" onclick="dashKpi('${a}')" title="${a.indexOf('st:')===0?'Show only '+l+' projects':'Jump to '+l}"><span class="kpi-ic">${DASHIC[ic]||''}</span><b>${v}</b><span>${l}</span></button>`).join('')}
+     ${opt.map(([k,l])=>{const n=num(f[k]);return `<button class="kpi gold" data-kact="additional" onclick="dashKpi('additional')" title="More details"><span class="kpi-ic">${DASHIC.pubs}</span><b>${n!=null?n:esc(f[k])}</b><span>${l}</span></button>`;}).join('')}
+   </div>
+   <div class="dash-hint"><span class="hi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5M12 8h.02"/></svg></span><span>New here? <b>Tap any number, bar, or status</b> to filter the projects below — and <b>tap a project</b> to open its full details.</span></div>
+
+   <div class="fd-grid" id="dash-domchart">
+     <div class="card">
+       <h3>Projects by domain</h3><div class="sub">Click a domain to filter the project list below</div>
+       ${domBars}
+     </div>
+     <div class="card">
+       <h3>Status split</h3><div class="sub">Click a status to filter</div>
+       <div class="db-donut-wrap">${dashDonut(donutSegs)}<div class="db-leg">${donutLeg}</div></div>
+     </div>
+   </div>
+
+   <div class="card full" id="dash-projects" style="margin-top:16px">
+     <h3>Projects</h3><div class="sub">Search, filter by status / domain / funder, and click any project for full detail</div>
+     <div class="pj-tools">
+       <span class="pj-search"><span class="ic">⌕</span><input id="dash-q" type="text" placeholder="Search project title or funder…" autocomplete="off"></span>
+       <button class="pj-chip" data-st="all" onclick="dashSetStatus('all')">All</button>
+       <button class="pj-chip" data-st="active" onclick="dashSetStatus('active')"><span class="dot" style="background:#1F9E57"></span>Active</button>
+       ${st.ongoing>0?`<button class="pj-chip" data-st="ongoing" onclick="dashSetStatus('ongoing')"><span class="dot" style="background:#D08A2E"></span>Ongoing</button>`:''}
+       <button class="pj-chip" data-st="done" onclick="dashSetStatus('done')"><span class="dot" style="background:#8A8079"></span>Completed</button>
+       <button class="pj-clear" id="dash-clear" onclick="dashClear()" style="display:none">Clear filters ✕</button>
+     </div>
+     <div class="pj-count" id="dash-count"></div>
+     <div class="pj-list" id="dash-plist"></div>
+   </div>
+
+   <div class="card full" id="dash-funding" style="margin-top:16px">
+     <h3>Funding agencies</h3><div class="sub">Click an agency to filter projects</div>
+     <div class="fund-list">${fundList}</div>
+   </div>
+
+   <div class="card full" id="dash-collab" style="margin-top:16px">
+     <h3>Collaborations</h3><div class="sub">Researchers who share a sub-domain — click to open their 360°</div>
+     <div class="collab-grid">${collabCards}</div>
+   </div>
+
+   ${opt.filter(([k])=>num(f[k])==null).length?`<div class="card full" id="dash-additional" style="margin-top:16px"><h3>Additional</h3><div class="opt-grid">
+     ${opt.filter(([k])=>num(f[k])==null).map(([k,l])=>`<div class="opt txt"><b>${esc(f[k])}</b><span>${l}</span></div>`).join('')}
+     ${f.lab?`<div class="opt txt"><b>${esc(f.lab)}</b><span>Lab / Group</span></div>`:''}
+   </div></div>`:(f.lab?`<div class="card full" id="dash-additional" style="margin-top:16px"><h3>Lab / Group</h3><div class="opt-grid"><div class="opt txt"><b>${esc(f.lab)}</b><span>Research Group</span></div></div></div>`:'')}
+  `;
+  const qi=$('#dash-q');if(qi)qi.addEventListener('input',()=>{dash.q=qi.value;renderDashProjects();});
+  renderDashProjects();
+}
+function goBackFromDash(){hideFacDash();showFacultyDir();}
+function dashSetStatus(k){dash.status=(dash.status===k&&k!=='all')?'all':k;renderDashProjects();}
+function dashSetDom(id){dash.dom=(dash.dom===id)?'':id;renderDashProjects();}
+function dashSetFund(fn){dash.fund=(dash.fund===fn)?'':fn;renderDashProjects();}
+function dashClear(){dash.status='all';dash.dom='';dash.fund='';dash.q='';const qi=$('#dash-q');if(qi)qi.value='';renderDashProjects();}
+function renderDashProjects(){
+  let list=projectsOfFaculty(dash.fid);
+  if(dash.status!=='all')list=list.filter(p=>statusKey(p)===dash.status);
+  if(dash.dom)list=list.filter(p=>p.dom===dash.dom);
+  if(dash.fund)list=list.filter(p=>p.fund===dash.fund);
+  if(dash.q){const q=dash.q.toLowerCase();list=list.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.fund||'').toLowerCase().includes(q));}
+  const active=dash.status!=='all'||dash.dom||dash.fund||dash.q;
+  const cl=$('#dash-clear');if(cl)cl.style.display=active?'inline':'none';
+  document.querySelectorAll('.pj-chip').forEach(c=>c.classList.toggle('on',c.dataset.st===dash.status));
+  document.querySelectorAll('.kpi[data-kact^="st:"]').forEach(k=>k.classList.toggle('sel',k.dataset.kact==='st:'+dash.status&&dash.status!=='all'));
+  document.querySelectorAll('.db-bar').forEach(b=>b.classList.toggle('on',b.dataset.dom===dash.dom&&!!dash.dom));
+  document.querySelectorAll('.fund-item').forEach(b=>b.classList.toggle('on',b.dataset.fund===dash.fund&&!!dash.fund));
+  const total=projectsOfFaculty(dash.fid).length;
+  const cnt=$('#dash-count');if(cnt)cnt.textContent=active?`Showing ${list.length} of ${total} projects`:`${total} projects`;
+  const box=$('#dash-plist');if(!box)return;
+  if(!list.length){box.innerHTML='<div class="pj-empty">No projects match these filters.</div>';return;}
+  box.innerHTML=list.map(p=>{
+    const sk=statusKey(p),dom=byId(DB.domains,p.dom),sd=p.sub?byId(DB.subdomains,p.sub):null,pi=byId(DB.faculty,p.faculty[0]);
+    return `<div class="pj fd-status ${sk}">
+      <div class="pj-head" onclick="this.parentNode.classList.toggle('open')">
+        <span class="pj-dom-dot" style="background:${dom?(COLORS[dom.id]||'#8A5A33'):'#c9c2ba'}"></span>
+        <span class="pj-main"><b>${esc(p.name)}</b><span>${dom?esc(dom.name):'—'}${sd?' · '+esc(sd.name):''}</span></span>
+        ${p.fund?`<span class="pj-ft">${esc(p.fund)}</span>`:''}
+        <span class="pj-st">${statusName[sk]}</span><span class="pj-more">Details</span><span class="pj-chev">▾</span>
+      </div>
+      <div class="pj-body"><div class="pj-body-in">
+        <div class="pj-kv"><dt>Principal Investigator</dt><dd>${pi?esc(pi.name):'—'}</dd></div>
+        <div class="pj-kv"><dt>Department</dt><dd>${esc(p.dept||'—')}</dd></div>
+        <div class="pj-kv"><dt>Funding agency</dt><dd>${esc(p.fund||'—')}</dd></div>
+        <div class="pj-kv"><dt>Project type</dt><dd>${esc(p.type||'—')}</dd></div>
+        <div class="pj-kv"><dt>Project no.</dt><dd>${esc(p.no||'—')}</dd></div>
+        <div class="pj-kv"><dt>Research domain</dt><dd>${dom?`<span class="lnk" onclick="event.stopPropagation();dashSetDom('${dom.id}')">${esc(dom.name)}</span>`:'—'}</dd></div>
+      </div></div></div>`;}).join('');
+}
+
+const tip=$('#tooltip');
+function showTooltip(e,d){
+  let body='';
+  if(d.kind==='subdomain'){const s=byId(DB.subdomains,d.id);body=`<span>${esc(s.desc||d.count||'')}</span>`;}
+  if(d.kind==='dept'){body=`<span>${esc(d.count||'')} — click to open</span>`;}
+  if(d.kind==='faculty'){const f=byId(DB.faculty,d.real||d.id);body=`<span>${esc(f.name)} · ${esc(f.desig||'')} ${esc(f.dept)} · ${projectsOfFaculty(f.id).length} projects</span>`;}
+  if(d.kind==='project'){const p=byId(DB.projects,d.id);body=`<span>${esc(p.fund)} · ${esc(p.status)} — click for details</span>`;}
+  tip.innerHTML=`<b>${esc(d.label)}</b>${body}`;tip.style.display='block';moveTooltip(e);
+}
+function moveTooltip(e){const r=$('#mapview').getBoundingClientRect();
+  tip.style.left=Math.min(e.clientX-r.left+16,r.width-290)+'px';tip.style.top=(e.clientY-r.top+14)+'px';}
+function hideTooltip(){tip.style.display='none';}
+
+/* ===== ZOOM ONLY (no pan) — map move nahi hoga, sirf zoom in/out ===== */
+function applyZoom(){if(gRoot)gRoot.setAttribute('transform',`translate(${baseX},${baseY}) scale(${zoom.k})`);updateZoomLabel();}
+function updateZoomLabel(){const l=$('#zoom-label');if(l)l.textContent=Math.round((zoom.k/fitK)*100)+'%';}
+function zoomBy(f){zoom.k=Math.min(ZMAX,Math.max(ZMIN,zoom.k*f));applyZoom();}
+function zoomReset(){zoom.k=fitK;applyZoom();}
+svg.addEventListener('wheel',e=>{e.preventDefault();zoomBy(e.deltaY<0?1.12:0.893);},{passive:false});
+window.addEventListener('resize',()=>{if($('#mapview').classList.contains('active')){prevPos={};drawGraph();if(isFacNav())setupFacNav();sizeDots();}});
+
+/* =========================================================
+   SIDE PANEL
+   ========================================================= */
+const panel=$('#side-panel');
+function statPills(sub){
+  return String(sub).split('·').map(part=>{
+    const t=part.trim();if(!t)return'';
+    const low=t.toLowerCase();
+    if(low==='active'||low==='closed')          /* status token -> coloured pill (Active = green) */
+      return `<span class="sp-stat sp-status status-${esc(t)}">${esc(t)}</span>`;
+    const m=t.match(/^(\d[\d,]*)\s+(.*)$/);
+    return m?`<span class="sp-stat"><b>${esc(m[1])}</b> ${esc(m[2])}</span>`
+            :`<span class="sp-stat">${esc(t)}</span>`;
+  }).join('');
+}
+function panelShell(kind,color,title,sub,body,domId,code){
+  const img=domId&&DOMAIN_IMG[domId]?`<img src="${DOMAIN_IMG[domId]}" alt="" onerror="this.remove()">`:'';
+  const codeBadge=code?`<span class="sp-hero-code">${esc(code)}</span>`:'';
+  panel.innerHTML=`<div class="sp-hero" style="--sp-c:${color}">${img}
+    <button class="sp-close" onclick="togglePanel()">✕</button>
+    <div class="sp-hero-txt">
+      <span class="sp-hero-kind">${kind}</span>${codeBadge}
+      <h2>${esc(title)}</h2>
+      <div class="cur">Curation: Office of Research &amp; Development · IIT Kanpur</div>
+    </div></div>
+  <div class="sp-stats">${statPills(sub)}</div>
+  <div class="sp-body">${body}</div>`;
+}
+function renderCenterPanel(){
+  if(view.type==='domain')return panelDomain(view.id);
+  if(view.type==='subdomain')return panelSubdomain(view.id);
+  if(view.type==='subdept')return panelSubdept(view.id,view.dept);
+  if(view.type==='faculty')return panelFaculty(view.id);
+}
+function panelSubdept(sid,dept){
+  const s=byId(DB.subdomains,sid),c=colorOfSub(sid);
+  const fac=facultyOfSub(sid).filter(f=>f.dept===dept);
+  const prj=projectsOfSub(sid).filter(p=>p.dept===dept);
+  panelShell('Department view',c,`${deptFull(dept)}`,`${s.name} · ${fac.length} faculty · ${prj.length} projects`,`
+    <div class="sp-sec"><h5>What you are seeing</h5><p class="sp-lead">${esc(s.name)} ke andar ${esc(deptFull(dept))} department ki faculty aur unke sponsored projects.</p></div>
+    <div class="sp-sec"><h5>Faculty (${fac.length})</h5>${fac.map(f=>listFaculty(f,c)).join('')||'<p>No faculty from this department here.</p>'}</div>
+    <div class="sp-sec"><h5>Projects (${prj.length})</h5>${prj.length?capList(prj,listProject):'<p>No projects from this department here.</p>'}</div>`,s.domain,codeOf('sub',sid));
+}
+function appAreasUI(raw){
+  /* split on common separators; agar list jaisa na ho to single styled callout */
+  let parts=String(raw).split(/[;\n•|·]+/).map(x=>x.trim()).filter(Boolean);
+  if(parts.length<2){
+    const cp=String(raw).split(',').map(x=>x.trim()).filter(Boolean);
+    if(cp.length>=2&&cp.every(p=>p.length<=46))parts=cp;     /* short comma items = list */
+  }
+  if(parts.length<2)                                          /* ek hi descriptive line -> callout */
+    return `<div class="app-lead"><span class="ic">${APP_ICON}</span><span>${esc(raw)}</span></div>`;
+  return `<div class="app-areas">${parts.map(p=>
+    `<span class="app-area"><span class="ic">${APP_ICON}</span><span>${esc(p)}</span></span>`).join('')}</div>`;
+}
+function fundersBlock(funders){
+  if(!funders||!funders.length)return '';
+  return `<div class="sp-sec"><div class="sp-funders">
+    <div class="fund-head">Key funders &amp; partners</div>
+    <div class="funder-chip-row">${funders.map(f=>`<span class="funder-chip">${esc(f)}</span>`).join('')}</div>
+  </div></div>`;
+}
+function panelDomain(id){
+  const d=byId(DB.domains,id),c=COLORS[id];
+  const subs=subsOfDomain(id),fac=facultyOfDomain(id),prj=projectsOfDomain(id);
+  panelShell('Research domain',c,d.name,`${subs.length} sub-domains · ${fac.length} faculty · ${prj.length} projects`,`
+    ${fundersBlock(d.funders)}
+    <div class="sp-sec"><h5>About this domain</h5><p class="sp-lead">${esc(d.desc)}</p></div>
+    ${d.apps?`<div class="sp-sec"><h5>Key Application Areas</h5>${appAreasUI(d.apps)}</div>`:''}
+    <div class="sp-sec"><h5>Sub-domains inside this domain</h5><div class="chip-row">
+      ${subs.map(s=>`<button class="chip" onclick='navigate({type:"subdomain",id:"${s.id}"})'>${esc(s.name)}<span class="code-badge">${codeOf('sub',s.id)}</span></button>`).join('')}</div></div>
+    <div class="sp-sec"><h5>Faculty working in this domain (${fac.length})</h5>${capList(fac,f=>listFaculty(f,c),100)}</div>`,id,codeOf('dom',id));
+}
+function panelSubdomain(id){
+  const s=byId(DB.subdomains,id),c=colorOfSub(id);
+  const fac=facultyOfSub(id),prj=projectsOfSub(id);
+  panelShell('Sub-domain',c,s.name,`${domainOf(id).name} · ${fac.length} faculty · ${prj.length} projects`,`
+    ${s.desc?`<div class="sp-sec"><h5>What this research area covers</h5><p class="sp-lead">${esc(s.desc)}.</p></div>`:''}
+    <div class="sp-sec"><h5>Faculty in this area</h5>${fac.map(f=>listFaculty(f,c)).join('')||'<p>No mapped faculty yet.</p>'}</div>
+    <div class="sp-sec"><h5>Projects in this area (${prj.length})</h5>${prj.length?capList(prj,listProject):'<p>No mapped projects yet.</p>'}</div>`,s.domain,codeOf('sub',id));
+}
+function panelFaculty(id){
+  const f=byId(DB.faculty,id),c=fcolor(f);
+  const prj=projectsOfFaculty(id);
+  const areas=splitAreas(f.areas);
+  panelShell('Faculty member',c,f.name,`${f.desig?f.desig+' · ':''}${f.dept}, IIT Kanpur · ${prj.length} projects`,`
+    <div class="sp-sec"><h5>Contact</h5><div class="contact-rows">
+      ${f.email?`<a href="mailto:${esc(f.email)}">${EMAIL_ICON}${esc(f.email)}</a>`:''}
+      ${f.phone?`<span class="row">${PHONE_ICON}${esc(f.phone)}</span>`:''}
+      ${f.home?`<a href="${esc(f.home)}" target="_blank" rel="noopener">${LINK_ICON}Official faculty profile</a>`:''}
+      ${!f.email&&!f.phone&&!f.home?'<span class="row">Contact details coming soon</span>':''}
+    </div></div>
+    ${areas.length?`<div class="sp-sec"><h5>Research areas</h5><div class="chip-row">
+      ${areas.map(a=>`<span class="chip static">${esc(a)}</span>`).join('')}</div></div>`:''}
+    <div class="sp-sec"><h5>Sub-domains</h5><div class="chip-row">
+      ${f.subs.map(sid=>{const s=byId(DB.subdomains,sid);return s?`<button class="chip" onclick='navigate({type:"subdomain",id:"${sid}"})'>${esc(s.name)}<span class="code-badge">${codeOf('sub',sid)}</span></button>`:'';}).join('')}</div></div>
+    <div class="sp-sec"><h5>Sponsored projects (${prj.length})</h5>${capList(prj,listProject)}</div>`,f.domain);
+}
+function capList(arr,render,cap=80){
+  return arr.slice(0,cap).map(render).join('')+(arr.length>cap?`<p style="font-size:12px;color:var(--grey-olive);padding:4px 2px">+ ${arr.length-cap} more — search se refine karein</p>`:'');
+}
+function listFaculty(f,c){
+  return `<div class="list-item" onclick='navigate({type:"faculty",id:"${f.id}"})'>
+    <span class="li-ava" style="color:${c};border-color:${c}">${PERSON}</span>
+    <span class="li-main"><b>${esc(f.name)}</b><span>${esc(f.desig||'')} ${esc(f.dept)}, IIT Kanpur</span></span>
+    <span class="li-count">${projectsOfFaculty(f.id).length} prj</span></div>`;
+}
+function listProject(p){
+  const c=p.sub?colorOfSub(p.sub):'#798478';
+  return `<div class="list-item" onclick="showProjectPanel('${p.id}')">
+    <span class="li-ava" style="color:${c};border-color:${c};border-radius:8px;font-size:13px">◆</span>
+    <span class="li-main"><b>${esc(p.name)}</b><span>${esc(p.fund)}</span></span>
+    <span class="status-pill status-${esc(p.status)}">${esc(p.status)}</span></div>`;
+}
+function showProjectPanel(pid){
+  const p=byId(DB.projects,pid);
+  const sd=p.sub?byId(DB.subdomains,p.sub):null,dom=byId(DB.domains,p.dom),c=COLORS[p.dom]||'#AB4531';
+  const pi=byId(DB.faculty,p.faculty[0]);
+  panelShell('Project detail',c,p.name,`${p.fund} · ${p.status}`,`
+    ${sd&&sd.desc?`<div class="sp-sec"><h5>Research area this project belongs to</h5><p class="sp-lead">${esc(sd.desc)}.</p></div>`:''}
+    <div class="sp-sec"><h5>Details</h5><dl class="kv">
+      <dt>Project No.</dt><dd><span class="kv-code">${esc(p.no||'—')}</span></dd>
+      <dt>Principal Investigator</dt><dd>${pi?`<span class="kv-link" onclick='navigate({type:"faculty",id:"${pi.id}"})'>${esc(pi.name)}</span>`:'—'}</dd>
+      <dt>Department</dt><dd>${esc(p.dept)}, IIT Kanpur</dd>
+      <dt>Research Domain</dt><dd>${dom?`<span class="kv-link" onclick='navigate({type:"domain",id:"${dom.id}"})'><i class="kv-dot" style="background:${COLORS[dom.id]}"></i>${esc(dom.name)}</span><span class="code-badge">${codeOf('dom',dom.id)}</span>`:'—'}</dd>
+      <dt>Sub-domain</dt><dd>${sd?`<span class="kv-link" onclick='navigate({type:"subdomain",id:"${sd.id}"})'><i class="kv-dot" style="background:${colorOfSub(sd.id)}"></i>${esc(sd.name)}</span><span class="code-badge">${codeOf('sub',sd.id)}</span>`:'—'}</dd>
+      <dt>Funding Agency</dt><dd><span class="kv-tag">${esc(p.fund)}</span></dd>
+      <dt>Project Type</dt><dd>${esc(p.type)}</dd>
+      <dt>Status</dt><dd><span class="status-pill status-${esc(p.status)}">${esc(p.status)}</span></dd></dl></div>
+    ${pi?`<div class="sp-sec"><h5>Principal Investigator</h5>${listFaculty(pi,c)}</div>`:''}
+    <div class="sp-sec"><h5>Explore</h5><div class="chip-row">
+      ${sd?`<button class="chip" onclick='navigate({type:"subdomain",id:"${sd.id}"})'>↳ ${esc(sd.name)} map</button>`:''}
+      ${dom?`<button class="chip" onclick='navigate({type:"domain",id:"${dom.id}"})'>↳ ${esc(dom.name)} map</button>`:''}</div></div>`,p.dom);
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+function searchAll(q){
+  q=q.toLowerCase();const has=t=>t.toLowerCase().includes(q);
+  return {
+    domains:DB.domains.filter(d=>has(d.name)||has(d.apps||'')),
+    subs:DB.subdomains.filter(s=>has(s.name)||has(s.desc||'')),
+    faculty:DB.faculty.filter(f=>has(f.name)||has(f.dept)||has(f.areas||'')),
+    projects:DB.projects.filter(p=>has(p.name)||has(p.fund))
+  };
+}
+function srItem(c,label,sub,action){
+  return `<div class="sr-item" onmousedown="${action};">
+    <span class="sr-dot" style="background:${c}"></span><span class="sr-main">${esc(label)}</span><span class="sr-sub">${esc(sub)}</span></div>`;
+}
+function renderResults(box,q){
+  if(q.trim().length<2){box.classList.remove('open');return;}
+  const r=searchAll(q.trim());const LIM=5;const out=[];
+  const grp=(title,items,total)=>{if(items.length)out.push(`<div class="sr-group">${title}${total>LIM?`<em>${total} found · showing ${LIM}</em>`:''}</div>`+items.join(''));};
+  grp('Domains',r.domains.slice(0,LIM).map(d=>srItem(COLORS[d.id],d.name,subsOfDomain(d.id).length+' areas',`navigate({type:'domain',id:'${d.id}'})`)),r.domains.length);
+  grp('Sub-domains',r.subs.slice(0,LIM).map(s=>srItem(COLORS[s.domain],s.name,domainOf(s.id).name.split(',')[0],`navigate({type:'subdomain',id:'${s.id}'})`)),r.subs.length);
+  grp('Faculty',r.faculty.slice(0,LIM).map(f=>srItem(fcolor(f),f.name,(f.desig||f.dept),`navigate({type:'faculty',id:'${f.id}'})`)),r.faculty.length);
+  grp('Projects',r.projects.slice(0,LIM).map(p=>srItem(p.dom?COLORS[p.dom]:'#798478',p.name,p.fund.split(' ').slice(0,3).join(' '),`openProjectGlobal('${p.id}')`)),r.projects.length);
+  box.innerHTML=out.length?out.join(''):`<div class="sr-item">No results for “${esc(q)}”. Try a technology, name, or funder.</div>`;
+  box.classList.add('open');
+}
+function wireSearch(inputId,boxId){
+  const inp=$(inputId),box=$(boxId);
+  if(!inp||!box)return;
+  inp.addEventListener('input',()=>renderResults(box,inp.value));
+  inp.addEventListener('focus',()=>{if(inp.value.trim().length>=2)renderResults(box,inp.value);});
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){const first=box.querySelector('.sr-item');if(first){first.dispatchEvent(new Event('mousedown'));box.classList.remove('open');}}
+    if(e.key==='Escape')box.classList.remove('open');
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest(inputId)&&!e.target.closest(boxId))box.classList.remove('open');});
+}
+function bigSearchSet(q){const i=$('#hsearch');if(!i)return;i.value=q;i.focus();renderResults($('#hsearch-results'),q);}
+
+function sizeDots(){
+  const c=$('#dots'),m=$('#mapview');c.width=m.clientWidth;c.height=m.clientHeight;
+  const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.fillStyle='rgba(122,84,60,.16)';
+  for(let i=26;i<c.width;i+=26)for(let j=26;j<c.height;j+=26){x.beginPath();x.arc(i,j,0.9,0,7);x.fill();}
+}
+
+/* ===== faculty directory ===== */
+function initDir(){
+  const depts=[...new Set(DB.faculty.map(f=>f.dept))].sort();
+  $('#dir-dept').innerHTML='<option value="">All departments</option>'+depts.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
+  $('#dir-dom').innerHTML='<option value="">All domains</option>'+DB.domains.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('');
+  ['dir-q','dir-dept','dir-dom','dir-sort'].forEach(id=>{
+    const e=document.getElementById(id);
+    e.addEventListener(id==='dir-q'?'input':'change',renderDir);
+  });
+}
+function dirCard(f){
+  const c=fcolor(f),soft=fsoft(f),n=projectsOfFaculty(f.id).length;
+  const dom=byId(DB.domains,f.domain);
+  return `<div class="dir-card" style="--dc:${c};--dc-soft:${soft}">
+    <div class="dir-top" onclick='navigate({type:"faculty",id:"${f.id}"})'>
+      <span class="dir-photo">${f.photo?`<img src="${esc(f.photo)}" alt="${esc(f.name)}" onerror="this.remove()">`:PERSON}</span>
+      <span><h4>${esc(f.name)}</h4><div class="meta">${esc(f.desig||'Faculty')} · ${esc(f.dept)}, IIT Kanpur</div></span>
+    </div>
+    ${dom?`<span class="dir-domain">${esc(dom.name)}</span>`:''}
+    <div class="dir-contact">
+      ${f.email?`<a href="mailto:${esc(f.email)}" title="${esc(f.email)}">${EMAIL_ICON}${esc(f.email)}</a>`:''}
+      ${f.phone?`<span class="row">${PHONE_ICON}${esc(f.phone)}</span>`:''}
+      ${f.home?`<a href="${esc(f.home)}" target="_blank" rel="noopener">${LINK_ICON}Official profile</a>`:''}
+    </div>
+    <div class="dir-actions">
+      <button class="dir-btn solid" onclick='navigate({type:"faculty",id:"${f.id}"})'>View 360° profile</button>
+      <button class="dir-btn" onclick='navigate({type:"faculty",id:"${f.id}"})'>${n} projects</button>
+    </div></div>`;
+}
+function renderDir(){
+  const q=($('#dir-q').value||'').toLowerCase(),dept=$('#dir-dept').value,dom=$('#dir-dom').value,sort=$('#dir-sort').value;
+  let list=DB.faculty.filter(f=>(!dept||f.dept===dept)&&(!dom||f.domain===dom)&&
+    (!q||f.name.toLowerCase().includes(q)||(f.areas||'').toLowerCase().includes(q)));
+  list=list.slice().sort(sort==='name-desc'
+    ?(a,b)=>b.name.localeCompare(a.name)
+    :(a,b)=>a.name.localeCompare(b.name));
+  const CAP=200,shown=list.slice(0,CAP);
+  $('#dir-count').textContent=list.length>CAP?`Showing first ${CAP} of ${list.length} faculty — filters se refine karein`:`Showing ${list.length} of ${DB.faculty.length} faculty members`;
+  $('#dir-grid').innerHTML=shown.map(dirCard).join('')||'<p style="color:var(--grey-olive);font-size:13px">No faculty match these filters.</p>';
+}
+
+/* init */
+renderDiscover();
+(function(){
+  const targets=[['iitk-logo',IITK_LOGO_SOURCES],['iitk-logo-foot',IITK_LOGO_WHITE]];
+  targets.forEach(([imgId,srcs])=>{
+    const im=document.getElementById(imgId);if(!im)return;
+    let i=0;
+    const tryNext=()=>{
+      if(i>=srcs.length){im.remove();return;}
+      im.src=srcs[i++];
+    };
+    im.onload=()=>{im.style.display='block';};
+    im.onerror=tryNext;
+    tryNext();
+  });
+})();
+wireSearch('#hsearch','#hsearch-results');
+$('#ms-fac').addEventListener('click',()=>{if(view&&view.type==='subdomain'&&view.mode==='dept'){view.mode='fac';drawGraph();renderLegend();renderModeSwitch();renderCenterPanel();}});
+$('#ms-dept').addEventListener('click',()=>{if(view&&view.type==='subdomain'&&view.mode!=='dept'){view.mode='dept';drawGraph();renderLegend();renderModeSwitch();renderCenterPanel();}});
+
+/* =========================================================
+   LIVE GOOGLE SHEET DATA
+   ========================================================= */
+const DATA_FILE='data.xlsx';
+/* ▼ DATA SOURCE — yahan se data aata hai. Naya "Publish to web" sheet (XLSX) ▼
+   pubhtml link ko pub?output=xlsx me badal kar use kiya hai.
+   Naya sheet badalna ho to neeche wali line me URL replace kar dena. */
+const GOOGLE_PUBLISHED_XLSX='https://docs.google.com/spreadsheets/d/e/2PACX-1vRE9y_sL9YnpFMseXf-fAxQdsWAXWmiSP8yfp4G_MXqZBbELUvq0EFAiSCmAP93OA/pub?output=xlsx';
+const GOOGLE_SHEET_ID='';   /* purana private sheet hata diya — ab sirf upar wale published sheet se data */
+const SHEET_FIRST=true;
+
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+
+function buildFromWorkbook(wb){
+  const sheetRows=key=>{const sn=wb.SheetNames.find(s=>s.toLowerCase().includes(key));
+    return sn?XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:''}):null;};
+  const split=(rows,marker)=>{if(!rows)return {head:null,body:null};
+    const i=rows.findIndex(r=>r.some(c=>String(c).trim().toLowerCase()===marker));
+    return i<0?{head:null,body:null}:{head:rows[i],body:rows.slice(i+1)};};
+  const colIdx=(head,...names)=>{if(!head)return -1;
+    for(let i=0;i<head.length;i++){const h=String(head[i]).trim().toLowerCase();
+      if(names.some(n=>h===n||h.includes(n)))return i;}return -1;};
+  const sx=split(sheetRows('summary'),'domain id'),   S=sx.body;
+  const tx=split(sheetRows('taxonomy'),'domain id'),  T=tx.body;
+  const fx=split(sheetRows('faculty'),'faculty name'),F=fx.body;
+  const px=split(sheetRows('project'),'project title'),P=px.body;
+  if(!S||!T||!F||!P){console.warn('Google Sheet: sheets/headers not recognised');return null;}
+  const str=v=>String(v==null?'':v).trim();
+  /* Faculty ID column header se detect — agar Faculty Master + Project Database dono me
+     "Faculty ID" column hai to usi se reliable join hota hai (naam-matching ki zaroorat nahi) */
+  const facIdCol=colIdx(fx.head,'faculty id');
+  const proFacIdCol=colIdx(px.head,'faculty id');
+
+  /* --- Faculty Master columns ko HEADER naam se detect karo ---
+     Sheet me ab extra "Research Domain" + "Sub-Domain ID" columns hain, isliye fixed
+     index galat pad rahe the ("Research Areas" ki jagah Sub-Domain naam aa raha tha). */
+  const fh=fx.head||[];
+  const cE=(...names)=>{for(let i=0;i<fh.length;i++){const h=String(fh[i]).trim().toLowerCase();if(names.some(n=>h===n))return i;}return -1;};
+  const cI=(...names)=>colIdx(fh,...names);
+  const C_NAME =cE('faculty name')>=0?cE('faculty name'):2;
+  const C_DEPT =cE('department')>=0?cE('department'):cI('department','dept');
+  const C_DESIG=cI('designation');
+  const C_EMAIL=cI('email');
+  const C_DOM  =cE('domain id')>=0?cE('domain id'):cI('domain id');
+  const C_SUB  =cE('sub-domain','sub domain','subdomain');   /* NAME col (exact -> "Sub-Domain ID" na pakde) */
+  const C_AREA =cI('research area');                          /* "Research Areas" */
+  const C_HOME =cI('profile','homepage','faculty url','url');
+  const C_PHONE=cI('phone','mobile','contact no');
+  const C_PHOTO=cI('photo','image','picture');
+  const C_PUB  =cI('publication','papers','no of publication','publications count');
+  const C_PAT  =cI('patent');
+  const C_STU  =cI('student','phd','scholars','research scholars');
+  const C_LAB  =cI('lab','laboratory','research group','group name');
+  const C_SCH  =cI('google scholar','scholar','orcid','researchgate','profile link');
+  const gv=(r,c)=>c>=0?str(r[c]):'';
+  /* ek area-cell ko items me todo (; | newline). "Also active — ..." auto-note research
+     area nahi (woh sub-domain list me already hai), use chhod do. Comma frontend handle karega. */
+  const addAreas=(set,cell)=>{if(!cell)return;
+    cell.split(/[;|\n]+/).forEach(a=>{a=a.trim();if(a&&!/^also active/i.test(a))set.add(a);});};
+
+  const domains={};
+  S.forEach(r=>{const id=str(r[0]);if(!id)return;
+    domains[id]={id,name:str(r[1]),apps:str(r[5]),funders:str(r[6]).split(';').map(x=>x.trim()).filter(Boolean),desc:''};});
+
+  const subdomains={};let cur=null;
+  T.forEach(r=>{if(str(r[0]))cur=str(r[0]);
+    if(str(r[2])&&domains[cur])domains[cur].desc=str(r[2]);
+    const sid=str(r[3]);if(!sid)return;
+    subdomains[sid]={id:sid,domain:cur,name:str(r[4]),desc:str(r[5]),
+      keyfac:str(r[6]).split(';').map(x=>x.trim()).filter(Boolean)};});
+
+  const normN=n=>str(n).replace(/^(Dr\.?|Prof\.?)\s*/i,'').replace(/[.\u00b7]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  const faculty={};
+  F.forEach(r=>{const nm=gv(r,C_NAME);if(!nm)return;
+    const k=normN(nm);
+    if(!faculty[k]){
+      faculty[k]={name:nm,dept:gv(r,C_DEPT),desig:gv(r,C_DESIG),email:gv(r,C_EMAIL),
+        domain:gv(r,C_DOM),subname:gv(r,C_SUB),home:gv(r,C_HOME),
+        phone:gv(r,C_PHONE),photo:gv(r,C_PHOTO),
+        pubs:gv(r,C_PUB),patents:gv(r,C_PAT),students:gv(r,C_STU),lab:gv(r,C_LAB),scholar:gv(r,C_SCH),
+        fid:facIdCol>=0?str(r[facIdCol]):'',areaSet:new Set(),subs:new Set()};
+    }else{                                   /* same faculty ki doosri row -> missing details bharo */
+      const f=faculty[k];
+      if(!f.email)f.email=gv(r,C_EMAIL);
+      if(!f.desig)f.desig=gv(r,C_DESIG);
+      if(!f.home)f.home=gv(r,C_HOME);
+      if(!f.phone)f.phone=gv(r,C_PHONE);
+      if(!f.photo)f.photo=gv(r,C_PHOTO);
+      if(!f.domain)f.domain=gv(r,C_DOM);
+    }
+    addAreas(faculty[k].areaSet,gv(r,C_AREA));   /* har row ke research areas ko union karo */
+  });
+
+  const keys=Object.keys(faculty);
+  const find=name=>{const k=normN(name);if(faculty[k])return k;
+    const tset=new Set(k.split(' '));let best=null;
+    for(const fk of keys){const fset=new Set(fk.split(' '));
+      const sub=[...tset].every(x=>fset.has(x))||[...fset].every(x=>tset.has(x));
+      if(sub)return fk;
+      const ks=k.split(' '),fs=fk.split(' ');
+      if(ks[0]===fs[0]){const la=ks[ks.length-1],lb=fs[fs.length-1];
+        if(la===lb||fset.has(la)||tset.has(lb)||la.startsWith(lb)||lb.startsWith(la))best=fk;}}
+    return best;};
+
+  for(const fk in faculty){const f=faculty[fk];
+    const hit=Object.values(subdomains).find(s=>(s.domain===f.domain&&s.name.toLowerCase()===f.subname.toLowerCase())||s.name.toLowerCase()===f.subname.toLowerCase());
+    if(hit)f.subs.add(hit.id);}
+  Object.values(subdomains).forEach(s=>s.keyfac.forEach(kn=>{
+    const fk=find(kn.replace(/\(partial\)/g,''));if(fk)faculty[fk].subs.add(s.id);}));
+
+  /* Faculty ID -> faculty key lookup (reliable join, naam ke bharose nahi) */
+  const idMap={};
+  for(const k in faculty){const fd=faculty[k].fid;if(fd)idMap[fd.toLowerCase()]=k;}
+  const findById=id=>{const v=str(id).toLowerCase();return v&&idMap[v]?idMap[v]:null;};
+
+  const projects=[];
+  P.forEach(r=>{const title=str(r[5]);if(!title)return;
+    const fname=str(r[4]);
+    let fk=(proFacIdCol>=0?findById(r[proFacIdCol]):null)||find(fname);
+    if(!fk){fk=normN(fname);
+      if(!faculty[fk])faculty[fk]={name:'Dr. '+fname.replace(/\s+\.$/,''),dept:str(r[2]),desig:'',email:'',
+        domain:str(r[7]),subname:'',areas:'',home:'',phone:'',photo:'',fid:'',subs:new Set()};}
+    const sid=subdomains[str(r[9])]?str(r[9]):'';
+    if(sid)faculty[fk].subs.add(sid);
+    projects.push({no:str(r[1]),dept:str(r[2]),fk,title,fund:str(r[6]),sub:sid,
+      dom:domains[str(r[7])]?str(r[7]):(sid?subdomains[sid].domain:''),type:str(r[11]),status:str(r[12])});});
+
+  const fids={},out={domains:Object.values(domains),subdomains:[],faculty:[],projects:[]};
+  Object.values(subdomains).forEach(s=>out.subdomains.push({id:s.id,domain:s.domain,name:s.name,desc:s.desc}));
+  Object.entries(faculty).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([k,f],i)=>{
+    const fid='F'+String(i+1).padStart(3,'0');fids[k]=fid;
+    const nm=/^(dr|prof)/i.test(f.name)?f.name:'Dr. '+f.name;
+    out.faculty.push({id:fid,name:nm,dept:f.dept,desig:f.desig,email:f.email,phone:f.phone,photo:f.photo,
+      pubs:f.pubs||'',patents:f.patents||'',students:f.students||'',lab:f.lab||'',scholar:f.scholar||'',
+      areas:f.areaSet?[...f.areaSet].join('; '):(f.areas||''),home:f.home,subs:[...f.subs].sort(),domain:f.domain});});
+  projects.forEach((p,i)=>out.projects.push({id:'P'+String(i+1).padStart(3,'0'),no:p.no,name:p.title,
+    faculty:[fids[p.fk]],sub:p.sub,dom:p.dom,fund:p.fund,type:p.type,status:p.status,dept:p.dept}));
+  if(!out.domains.length||!out.projects.length)return null;
+  return out;
+}
+
+function dlShow(title,msg,retry){
+  const o=$('#data-loader');if(!o)return;
+  o.classList.remove('gone');o.classList.toggle('error',!!retry);
+  if($('#dl-title'))$('#dl-title').textContent=title;
+  if($('#dl-msg'))$('#dl-msg').innerHTML=msg;
+  if($('#dl-retry'))$('#dl-retry').style.display=retry?'inline-block':'none';
+  if(retry){const s=$('#data-loader').querySelector('.dl-spin');if(s)s.style.display='none';}
+  else{const s=$('#data-loader').querySelector('.dl-spin');if(s)s.style.display='block';}
+}
+function dlHide(){const o=$('#data-loader');if(o)o.classList.add('gone');}
+
+function sheetUrls(id){
+  const x=`https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx&_cb=${Date.now()}`;
+  return [
+    x,
+    `https://api.allorigins.win/raw?url=`+encodeURIComponent(x),
+    `https://corsproxy.io/?url=`+encodeURIComponent(x),
+    `https://thingproxy.freeboard.io/fetch/`+x,
+    `https://api.codetabs.com/v1/proxy/?quest=`+encodeURIComponent(x)
+  ];
+}
+function pubUrls(x){
+  const u=x+(x.indexOf('?')>=0?'&':'?')+'_cb='+Date.now();
+  return [
+    u,
+    `https://api.allorigins.win/raw?url=`+encodeURIComponent(u),
+    `https://corsproxy.io/?url=`+encodeURIComponent(u),
+    `https://api.codetabs.com/v1/proxy/?quest=`+encodeURIComponent(u)
+  ];
+}
+
+async function tryLoadExternal(isRetry){
+  if(SHEET_FIRST)dlShow('Loading data from Google Sheet…','Aapke IIT Kanpur research data ko sheet se la rahe hain.');
+  const sources=[];
+  if(GOOGLE_SHEET_ID)sheetUrls(GOOGLE_SHEET_ID).forEach((u,i)=>sources.push({url:u,label:i?'Sheet export (via proxy)':'Sheet export'}));
+  if(GOOGLE_PUBLISHED_XLSX)pubUrls(GOOGLE_PUBLISHED_XLSX).forEach((u,i)=>sources.push({url:u,label:i?'Published sheet (via proxy)':'Published Google Sheet'}));
+  sources.push({url:DATA_FILE,label:DATA_FILE});
+  let lastErr='';
+  for(const src of sources){
+    try{
+      const res=await fetch(src.url,{cache:'no-store'});
+      if(!res.ok){lastErr='HTTP '+res.status;continue;}
+      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+      const wb=XLSX.read(await res.arrayBuffer(),{type:'array'});
+      const fresh=buildFromWorkbook(wb);
+      if(!fresh){lastErr='Sheet structure pehchaani nahi gayi (tab names / header rows check karein).';continue;}
+      DB.domains=fresh.domains;DB.subdomains=fresh.subdomains;DB.faculty=fresh.faculty;DB.projects=fresh.projects;
+      prevPos={};
+      renderDiscover();
+      const dg=$('#dir-grid');
+      if(dg&&dg.dataset.ready){initDir();renderDir();}
+      if($('#mapview').classList.contains('active')&&view)drawGraph();
+      const fsEl=$('#foot-stats');
+      if(fsEl)fsEl.textContent=`${DB.faculty.length} faculty · ${DB.projects.length} projects · live from ${src.label}`;
+      console.info('Synapse Nexus: live data loaded from',src.label,
+        {domains:DB.domains.length,subdomains:DB.subdomains.length,faculty:DB.faculty.length,projects:DB.projects.length});
+      dlHide();
+      return;
+    }catch(e){lastErr=(e&&e.message)||String(e);console.warn('Synapse Nexus: source failed —',src.label,e);}
+  }
+  dlShow('Sheet load nahi ho payi',
+    'Wajah: <b>'+esc(lastErr||'network/permission')+'</b><br><br>'+
+    '1. Sheet <b>Share → Anyone with the link → Viewer</b> honi chahiye.<br>'+
+    '2. Sheet me 4 tabs hon: <b>Domain Summary, Domain Taxonomy, Faculty Master, Project Database</b>.<br>'+
+    '3. Portal ko <b>http server</b> par kholo (file:// se fetch block hota hai).',
+    true);
+}
+
+if(SHEET_FIRST){DB.domains=[];DB.subdomains=[];DB.faculty=[];DB.projects=[];}
+tryLoadExternal();
+</script>
+</body>
+</html>
